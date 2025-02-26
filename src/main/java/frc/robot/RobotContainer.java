@@ -14,9 +14,15 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.FeederCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.LauncherCommand;
+import frc.robot.commands.MoveWristCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -24,6 +30,8 @@ import frc.robot.subsystems.LauncherSubsystem;
 import frc.robot.subsystems.WristSubsytem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
+import swervelib.SwerveDrive;
 import swervelib.SwerveInputStream;
 
 /**
@@ -41,11 +49,8 @@ public class RobotContainer
   private final FeederSubsystem feeder = new FeederSubsystem();
   private final LauncherSubsystem launcher = new LauncherSubsystem();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
-  private final 
 
-
-
-  private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+  private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
 
   /**
@@ -98,15 +103,43 @@ public class RobotContainer
                                                                                                                2))
                                                                                .headingWhile(true);
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+  // Intake function commands
+  Command intakeStill = new IntakeCommand(intake, 0);
+  Command intakeCollect = new IntakeCommand(intake, -0.3);
+  Command intakeFeed = new IntakeCommand(intake, 0.3);
+  // Command intakeLaunch = new IntakeCommand(intake, -1.0);
+
+  // Wrist position commands
+  Command wristGroundIntake = new MoveWristCommand(wrist, 1);
+  Command wristHold = new MoveWristCommand(wrist, 1);  
+  Command wristReefIntake = new MoveWristCommand(wrist, 3);
+  Command wristLaunch = new MoveWristCommand(wrist, 2);
+  Command wristCoralTop = new MoveWristCommand(wrist, 3);
+  Command wristProcessor = new MoveWristCommand(wrist, 3);
+  
+  // Elevator position commands
+  Command elevatorGroundIntake = new ElevatorCommand(elevator, 1);
+  Command elevatorL2Intake = new ElevatorCommand(elevator, 1);  
+  Command elevatorL3Intake = new ElevatorCommand(elevator, 3);
+  Command elevatorLaunch = new ElevatorCommand(elevator, 2);
+  Command elevatorCoralTop = new ElevatorCommand(elevator, 3);
+  Command elevatorProcessor = new ElevatorCommand(elevator, 3);
+  Command elevatorClimb = new ElevatorCommand(elevator, 3);
+
+  // Feeder commands
+  Command feederLaunch = new FeederCommand(feeder, 0);
+
+  // Launcher commands
+  Command launchDelay = new WaitCommand(1.0);
+  Command launchGamepiece = new LauncherCommand(launcher, 0);
+  Command launchStill = new LauncherCommand(launcher, 0);
+  
   public RobotContainer()
   {
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+    //NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   }
 
   /**
@@ -182,6 +215,16 @@ public class RobotContainer
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
     }
+
+    operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake)).onFalse(wristHold.alongWith(intakeStill));
+    
+    // operatorXbox.a().onTrue(elevatorGroundIntake);
+    // operatorXbox.x().onTrue(elevatorL2Intake);
+    // operatorXbox.y().onTrue(elevatorL3Intake);
+    
+    operatorXbox.a().onTrue(wristGroundIntake);
+    operatorXbox.x().onTrue(wristReefIntake);
+    // operatorXbox.y().onTrue(elevatorL3Intake);
 
   }
 
