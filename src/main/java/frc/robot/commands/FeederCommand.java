@@ -4,17 +4,19 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class LauncherCommand extends Command{
-  private final LauncherSubsystem m_launcher;
-  public double launchSpeed; 
+public class FeederCommand extends Command{
+  private final FeederSubsystem m_feeder;
+  public double feedSpeed; 
 
-  public LauncherCommand(LauncherSubsystem launcher, double speed){
-      m_launcher = launcher;
-      launchSpeed = speed; 
-      addRequirements(m_launcher);
+  public FeederCommand(FeederSubsystem feeder, double speed){
+      m_feeder = feeder;
+      feedSpeed = speed; 
+      addRequirements(m_feeder);
   }
   
 
@@ -23,7 +25,7 @@ public class LauncherCommand extends Command{
 
   @Override
   public void execute(){
-      m_launcher.launch(launchSpeed);
+      m_feeder.spinFeeder(feedSpeed);
   }
 
   @Override

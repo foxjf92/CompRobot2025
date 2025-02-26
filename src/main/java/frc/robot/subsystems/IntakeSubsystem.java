@@ -23,8 +23,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private SparkMaxConfig intakeMotorConfig;
 
   private double backRollerMultiplier = 3.0;
-  private SparkAnalogSensor analogSensor;
-  public static boolean algaeCollected;
+  private SparkAnalogSensor algaeSensor;
+  public static boolean algaeCollectedStatus;
 
 
   public IntakeSubsystem() {
@@ -44,8 +44,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public boolean algaeCollected() {
-
-    return false;
+    return algaeCollectedStatus;
   }
 
   public void spinIntake(double speed){
@@ -55,6 +54,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(algaeSensor.getVoltage() > 1.0) {
+      algaeCollectedStatus = false;
+    }
+    else {
+      algaeCollectedStatus = true;    
+    }
+    
     SmartDashboard.putBoolean("Algae Present?", algaeCollected());
   }
 

@@ -10,23 +10,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class IntakeCommand extends Command{
   private final IntakeSubsystem m_intake;
-  public double launchSpeed; 
+  public double intakeSpeed; 
 
   public IntakeCommand(IntakeSubsystem intake, double speed){
       m_intake = intake;
-      launchSpeed = speed; 
+      intakeSpeed = speed; 
       addRequirements(m_intake);
   }
   
 
   @Override
-  public void initialize(){
-      
-  }
+  public void initialize(){}
 
   @Override
   public void execute(){
-      m_intake.launch(launchSpeed);
+      m_intake.spinIntake(intakeSpeed);
   }
 
   @Override
