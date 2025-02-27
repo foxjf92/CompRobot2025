@@ -26,12 +26,13 @@ public class WristSubsytem extends SubsystemBase {
   public double currentPosition;
   
   public WristSubsytem() {
+    wristMotorConfig = new SparkMaxConfig();
 
     wristMotorConfig
-      .smartCurrentLimit(40)
+      .smartCurrentLimit(20)
       .idleMode(IdleMode.kBrake);
 
-    wristMotor = new SparkMax(9, MotorType.kBrushless);
+    wristMotor = new SparkMax(11, MotorType.kBrushless);
     wristMotor.configure(wristMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     wristEncoder = wristMotor.getEncoder();

@@ -35,24 +35,23 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     elevatorLeftConfig = new SparkMaxConfig();
     elevatorLeftConfig
-      .smartCurrentLimit(10) // TODO increase if needed
-      .idleMode(IdleMode.kBrake)
-      .follow( 10, true);
+      .smartCurrentLimit(40)
+      .idleMode(IdleMode.kBrake);
 
     elevatorRightConfig = new SparkMaxConfig();
     elevatorRightConfig
-      .smartCurrentLimit(20) // TODO increase if needed
+      .smartCurrentLimit(40) 
       .idleMode(IdleMode.kBrake)
       .softLimit
         .forwardSoftLimit(0.0)
         .forwardSoftLimitEnabled(false) // TODO update to true after setting soft limits
-        .reverseSoftLimit(0.0)
-        .reverseSoftLimitEnabled(false);
+        .reverseSoftLimit(-60.0)
+        .reverseSoftLimitEnabled(true);
       
-    elevatorLeft = new SparkMax(9, MotorType.kBrushless);
+    elevatorLeft = new SparkMax(10, MotorType.kBrushless);
     elevatorLeft.configure(elevatorLeftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    elevatorRight = new SparkMax(10, MotorType.kBrushless);
+    elevatorRight = new SparkMax(9, MotorType.kBrushless);
     elevatorRight.configure(elevatorRightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     elevatorRightEncoder = elevatorRight.getEncoder();
@@ -60,6 +59,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void moveElevator(double speed) {
     elevatorRight.set(speed);
+    elevatorLeft.set(-speed);
   }
 
   @Override

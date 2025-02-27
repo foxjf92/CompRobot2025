@@ -15,10 +15,10 @@ public class ElevatorCommand extends Command {
     private int targetPosition; //Symbolic arm position where 1 = ground intake, 2 = amp position, 3 = launch position
     public static double elevatorSetpoint; // Encoder position value that corresponds to arm position
 
-    public final double kP = 0.0; //2nd 
+    public final double kP = 0.02; //2nd was .01
     public final double kI = 0.0; //4th
     public final double kD = 0.0; //3rd
-    public final double arbFF = 0.0; // Start Here
+    public final double arbFF = 0.05; // Start Here
     
     private PIDController m_elevatorPID = new PIDController(kP,kI,kD); // look @ profiled PID maybe?
 
@@ -57,7 +57,7 @@ public class ElevatorCommand extends Command {
 
     @Override
     public void execute() {
-        double controlEffort = arbFF - m_elevatorPID.calculate(m_elevator.elevatorRightEncoder.getPosition(), elevatorSetpoint); // adds FF input to fight gravity, subtract PID output due to encoder inversion TODO check inversion
+        double controlEffort = - arbFF + m_elevatorPID.calculate(m_elevator.elevatorRightEncoder.getPosition(), elevatorSetpoint); // adds FF input to fight gravity, subtract PID output due to encoder inversion TODO check inversion
 
         m_elevator.moveElevator(controlEffort);
     }

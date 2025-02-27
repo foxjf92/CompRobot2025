@@ -11,7 +11,7 @@ public class MoveWristCommand extends Command{
     private int targetPosition; //Symbolic arm position where 1 = ground intake, 2 = amp position, 3 = launch position
     public static double wristSetpoint; // Encoder position value that corresponds to arm position
 
-    public final double kP = 0.0; //2nd 
+    public final double kP = 0.01; //2nd 
     public final double kI = 0.0; //4th
     public final double kD = 0.0; //3rd
     public final double arbFF = 0.0; // Start Here
@@ -52,7 +52,7 @@ public class MoveWristCommand extends Command{
     @Override
     public void execute(){
 
-        double controlEffort = arbFF - m_wristPID.calculate(m_wrist.wristEncoder.getPosition(), wristSetpoint); // adds FF input to fight gravity, subtract PID output due to encoder inversion
+        double controlEffort = m_wristPID.calculate(m_wrist.wristEncoder.getPosition(), wristSetpoint); // adds FF input to fight gravity, subtract PID output due to encoder inversion
 
         m_wrist.moveWrist(controlEffort);
     }

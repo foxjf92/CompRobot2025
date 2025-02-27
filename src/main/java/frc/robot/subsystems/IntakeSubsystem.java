@@ -28,19 +28,19 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
   public IntakeSubsystem() {
-
     intakeMotorConfig = new SparkMaxConfig();
     intakeMotorConfig
       .smartCurrentLimit(20)
       .idleMode(IdleMode.kBrake);
 
       
-    frontIntakeRoller = new SparkMax(12, MotorType.kBrushless);
+    frontIntakeRoller = new SparkMax(13, MotorType.kBrushless);
     frontIntakeRoller.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    backIntakeRoller = new SparkMax(13, MotorType.kBrushless);
+    backIntakeRoller = new SparkMax(12, MotorType.kBrushless);
     backIntakeRoller.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
+    algaeSensor = frontIntakeRoller.getAnalog();
   }
 
   public boolean algaeCollected() {
@@ -49,7 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void spinIntake(double speed){
     frontIntakeRoller.set(speed);
-    backIntakeRoller.set(speed*backRollerMultiplier);
+    backIntakeRoller.set(-speed*backRollerMultiplier);
   }
 
   @Override
@@ -60,7 +60,8 @@ public class IntakeSubsystem extends SubsystemBase {
     else {
       algaeCollectedStatus = true;    
     }
-    
+    algaeCollectedStatus = false;    
+
     SmartDashboard.putBoolean("Algae Present?", algaeCollected());
   }
 

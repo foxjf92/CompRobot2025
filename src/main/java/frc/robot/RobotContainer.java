@@ -41,8 +41,8 @@ import swervelib.SwerveInputStream;
  */
 public class RobotContainer
 {
-  final CommandXboxController driverXbox = new CommandXboxController(0);
-  final CommandXboxController operatorXbox = new CommandXboxController(1);
+  final CommandXboxController driverXbox = new CommandXboxController(1);
+  final CommandXboxController operatorXbox = new CommandXboxController(0);
 
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final WristSubsytem wrist = new WristSubsytem();
@@ -106,32 +106,33 @@ public class RobotContainer
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
   Command intakeCollect = new IntakeCommand(intake, -0.3);
-  Command intakeFeed = new IntakeCommand(intake, 0.3);
+  Command intakeFeed = new IntakeCommand(intake, -0.3);
   // Command intakeLaunch = new IntakeCommand(intake, -1.0);
 
   // Wrist position commands
   Command wristGroundIntake = new MoveWristCommand(wrist, 1);
-  Command wristHold = new MoveWristCommand(wrist, 1);  
-  Command wristReefIntake = new MoveWristCommand(wrist, 3);
+  Command wristHold = new MoveWristCommand(wrist, 2);  
+  Command wristReefIntake = new MoveWristCommand(wrist, 4);
   Command wristLaunch = new MoveWristCommand(wrist, 2);
   Command wristCoralTop = new MoveWristCommand(wrist, 3);
   Command wristProcessor = new MoveWristCommand(wrist, 3);
   
   // Elevator position commands
   Command elevatorGroundIntake = new ElevatorCommand(elevator, 1);
-  Command elevatorL2Intake = new ElevatorCommand(elevator, 1);  
-  Command elevatorL3Intake = new ElevatorCommand(elevator, 3);
-  Command elevatorLaunch = new ElevatorCommand(elevator, 2);
-  Command elevatorCoralTop = new ElevatorCommand(elevator, 3);
-  Command elevatorProcessor = new ElevatorCommand(elevator, 3);
-  Command elevatorClimb = new ElevatorCommand(elevator, 3);
+  Command elevatorL2Intake = new ElevatorCommand(elevator, 3);  
+  Command elevatorL3Intake = new ElevatorCommand(elevator, 4);
+  Command elevatorLaunch = new ElevatorCommand(elevator, 5);
+  //Command elevatorCoralTop = new ElevatorCommand(elevator, 3);
+ // Command elevatorProcessor = new ElevatorCommand(elevator, 3);
+  //Command elevatorClimb = new ElevatorCommand(elevator, 3);
 
   // Feeder commands
-  Command feederLaunch = new FeederCommand(feeder, 0);
-
+  Command feederLaunch = new FeederCommand(feeder, -0.3);
+  Command feederStill = new FeederCommand(feeder, 0);
+  
   // Launcher commands
-  Command launchDelay = new WaitCommand(1.0);
-  Command launchGamepiece = new LauncherCommand(launcher, 0);
+  Command launchDelay = new WaitCommand(0.5);
+  Command launchGamepiece = new LauncherCommand(launcher, -0.5);
   Command launchStill = new LauncherCommand(launcher, 0);
   
   public RobotContainer()
@@ -139,7 +140,10 @@ public class RobotContainer
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    //NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+    intake.setDefaultCommand(intakeStill);
+    wrist.setDefaultCommand(wristHold);
+    feeder.setDefaultCommand(feederStill);
+    launcher.setDefaultCommand(launchStill);
   }
 
   /**
@@ -216,15 +220,16 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     }
 
-    operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake)).onFalse(wristHold.alongWith(intakeStill));
+    operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake));
+    operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch))));
+
+    operatorXbox.a().onTrue(elevatorGroundIntake);
+    operatorXbox.x().onTrue(elevatorL2Intake);
+    operatorXbox.y().onTrue(elevatorL3Intake);
     
-    // operatorXbox.a().onTrue(elevatorGroundIntake);
-    // operatorXbox.x().onTrue(elevatorL2Intake);
-    // operatorXbox.y().onTrue(elevatorL3Intake);
-    
-    operatorXbox.a().onTrue(wristGroundIntake);
-    operatorXbox.x().onTrue(wristReefIntake);
-    // operatorXbox.y().onTrue(elevatorL3Intake);
+    // operatorXbox.a().onTrue(wristGroundIntake);
+    // operatorXbox.x().onTrue(wristReefIntake);
+    // operatorXbox.y().onTrue(wristHold);
 
   }
 
