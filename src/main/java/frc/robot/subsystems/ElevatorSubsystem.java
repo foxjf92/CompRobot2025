@@ -71,18 +71,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     currentPosition = elevatorRightEncoder.getPosition();
     SmartDashboard.putNumber("Elevator Position: ", currentPosition);
     SmartDashboard.putNumber("Elevator Setpoint", ElevatorCommand.elevatorSetpoint);
-
-    
-
-    // SmartDashboard.putNumber("Selected Gampeiece", selectGamepiece);
-
-    // if(RobotContainer.operatorController.back().getAsBoolean()){
-    //   selectGamepiece = 1;
-    // }
-      
-    // if(RobotContainer.operatorController.start().getAsBoolean()){
-    //   selectGamepiece = 2;
-    // }
   }
 
 }
