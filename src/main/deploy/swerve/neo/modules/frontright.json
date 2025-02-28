@@ -10,7 +10,7 @@
     "canbus": null
   },
   "inverted": {
-    "drive": false,
+    "drive": true,
     "angle": false
   },
   "angle": {
@@ -21,7 +21,7 @@
   "encoder": {
     "type": "thrifty",
     "id": 1,
-    "canbus": "null"
+    "canbus": null
   },
   "absoluteEncoderInverted": false
 }
