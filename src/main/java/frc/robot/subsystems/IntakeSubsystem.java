@@ -25,26 +25,26 @@ public class IntakeSubsystem extends SubsystemBase {
   private double backRollerMultiplier = 3.0;
   private SparkAnalogSensor algaeSensor;
   public static boolean algaeCollectedStatus;
-
-
-  public IntakeSubsystem() {
-    intakeMotorConfig = new SparkMaxConfig();
-    intakeMotorConfig
-      .smartCurrentLimit(20)
-      .idleMode(IdleMode.kBrake);
-
+  
+  
+    public IntakeSubsystem() {
+      intakeMotorConfig = new SparkMaxConfig();
+      intakeMotorConfig
+        .smartCurrentLimit(20)
+        .idleMode(IdleMode.kBrake);
+  
+        
+      frontIntakeRoller = new SparkMax(13, MotorType.kBrushless);
+      frontIntakeRoller.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  
+      backIntakeRoller = new SparkMax(12, MotorType.kBrushless);
+      backIntakeRoller.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
       
-    frontIntakeRoller = new SparkMax(13, MotorType.kBrushless);
-    frontIntakeRoller.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    backIntakeRoller = new SparkMax(12, MotorType.kBrushless);
-    backIntakeRoller.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    
-    algaeSensor = frontIntakeRoller.getAnalog();
-  }
-
-  public boolean algaeCollected() {
-    return algaeCollectedStatus;
+      algaeSensor = frontIntakeRoller.getAnalog();
+    }
+  
+    public static boolean algaeCollected() {
+      return algaeCollectedStatus;
   }
 
   public void spinIntake(double speed){
@@ -59,8 +59,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
     else {
       algaeCollectedStatus = true;    
-    }
-    algaeCollectedStatus = false;    
+    }   
 
     SmartDashboard.putBoolean("Algae Present?", algaeCollected());
   }

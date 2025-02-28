@@ -34,11 +34,7 @@ import java.io.File;
 import swervelib.SwerveDrive;
 import swervelib.SwerveInputStream;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
- * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
- * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
- */
+
 public class RobotContainer
 {
   final CommandXboxController driverXbox = new CommandXboxController(1);
@@ -140,19 +136,14 @@ public class RobotContainer
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+    // drivebase.setDefaultCommand();
     intake.setDefaultCommand(intakeStill);
     wrist.setDefaultCommand(wristHold);
     feeder.setDefaultCommand(feederStill);
     launcher.setDefaultCommand(launchStill);
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
-   * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
-   */
+  
   private void configureBindings()
   {
     Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
@@ -221,11 +212,13 @@ public class RobotContainer
     }
 
     operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake));
+    operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake).until(() -> IntakeSubsystem.algaeCollected()));
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch))));
 
     operatorXbox.a().onTrue(elevatorGroundIntake);
     operatorXbox.x().onTrue(elevatorL2Intake);
     operatorXbox.y().onTrue(elevatorL3Intake);
+    operatorXbox.b().onTrue(elevatorLaunch);
     
     // operatorXbox.a().onTrue(wristGroundIntake);
     // operatorXbox.x().onTrue(wristReefIntake);
