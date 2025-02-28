@@ -21,7 +21,7 @@ public final class Constants {
   public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED  = Units.feetToMeters(14.5);
+  public static final double MAX_SPEED  = Units.feetToMeters(16.6);
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
   //  public static final class AutonConstants
@@ -52,12 +52,13 @@ public final class Constants {
   // public static class OperatorConstants {}
 
   public static class WristConstants {
-    public static final double wristGroundIntakePosition = 30.0;
-    public static final double wristHoldPosition = 5.6;
+    public static final double wristStowPosition = 1.0;
+    public static final double wristGroundIntakePosition = 32.0;
+    public static final double wristHoldPosition = 0.5;
     public static final double wristL2IntakePosition = 15.0;
-    public static final double wristL3IntakePosition = 0.0;
-    public static final double wristLaunchPosition = 0.0;
-    public static final double wristCoralTopIntakePosition = 0.0;
+    //public static final double wristL3IntakePosition = 0.0;
+    public static final double wristLaunchPosition = 7.0;
+    //public static final double wristCoralTopIntakePosition = 0.0;
     public static final double wristProcessorPosiiton = 0.0;
   }
 
@@ -65,7 +66,8 @@ public final class Constants {
     public static final double elevatorGroundIntakePosition = -2.0;
     public static final double elevatorL2IntakePosition = -32.0;
     public static final double eleavtorL3IntakePosition = -57.0;
-    public static final double elevatorLaunchPosition = 0.0;
+    public static final double elevatorLaunchPosition = -50.0;
+    public static final double elevatorLaunchClearance = -45.0;
     public static final double elevatorCoralTopIntakePosition = 0.0;
     public static final double elevatorProcessorPosiiton = 0.0;
     public static final double elevatorClimbPosition = 0.0;

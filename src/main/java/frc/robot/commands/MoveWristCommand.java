@@ -28,6 +28,10 @@ public class MoveWristCommand extends Command{
     @Override
     public void initialize(){
 
+        
+        if (targetPosition == 0) {
+            wristSetpoint = WristConstants.wristStowPosition;
+        }
         if (targetPosition == 1) {
             wristSetpoint = WristConstants.wristGroundIntakePosition;
         }
@@ -40,9 +44,9 @@ public class MoveWristCommand extends Command{
         if (targetPosition == 4) {
             wristSetpoint = WristConstants.wristL2IntakePosition;
         }
-        if (targetPosition == 5) {
-            wristSetpoint = WristConstants.wristL3IntakePosition;
-        }
+        // if (targetPosition == 5) {
+        //     wristSetpoint = WristConstants.wristL3IntakePosition;
+        // }
         if (targetPosition == 6) {
             wristSetpoint = WristConstants.wristLaunchPosition;
         }

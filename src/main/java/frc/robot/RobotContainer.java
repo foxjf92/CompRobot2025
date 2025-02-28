@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
@@ -68,51 +69,55 @@ public class RobotContainer
                                                                                              driverXbox::getRightY)
                                                            .headingWhile(true);
 
-  /**
-   * Clone's the angular velocity input stream and converts it to a robotRelative input stream.
-   */
-  SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-                                                             .allianceRelativeControl(false);
+  // /**
+  //  * Clone's the angular velocity input stream and converts it to a robotRelative input stream.
+  //  */
+  // SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
+  //                                                            .allianceRelativeControl(false);
 
-  SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                        () -> -driverXbox.getLeftY(),
-                                                                        () -> -driverXbox.getLeftX())
-                                                                    .withControllerRotationAxis(() -> driverXbox.getRawAxis(
-                                                                        2))
-                                                                    .deadband(OperatorConstants.DEADBAND)
-                                                                    .scaleTranslation(0.8)
-                                                                    .allianceRelativeControl(true);
-  // Derive the heading axis with math!
-  SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
-                                                                               .withControllerHeadingAxis(() ->
-                                                                                                              Math.sin(
-                                                                                                                  driverXbox.getRawAxis(
-                                                                                                                      2) *
-                                                                                                                  Math.PI) *
-                                                                                                              (Math.PI *
-                                                                                                               2),
-                                                                                                          () ->
-                                                                                                              Math.cos(
-                                                                                                                  driverXbox.getRawAxis(
-                                                                                                                      2) *
-                                                                                                                  Math.PI) *
-                                                                                                              (Math.PI *
-                                                                                                               2))
-                                                                               .headingWhile(true);
+  // SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
+  //                                                                       () -> -driverXbox.getLeftY(),
+  //                                                                       () -> -driverXbox.getLeftX())
+  //                                                                   .withControllerRotationAxis(() -> driverXbox.getRawAxis(
+  //                                                                       2))
+  //                                                                   .deadband(OperatorConstants.DEADBAND)
+  //                                                                   .scaleTranslation(0.8)
+  //                                                                   .allianceRelativeControl(true);
+  // // Derive the heading axis with math!
+  // SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
+  //                                                                              .withControllerHeadingAxis(() ->
+  //                                                                                                             Math.sin(
+  //                                                                                                                 driverXbox.getRawAxis(
+  //                                                                                                                     2) *
+  //                                                                                                                 Math.PI) *
+  //                                                                                                             (Math.PI *
+  //                                                                                                              2),
+  //                                                                                                         () ->
+  //                                                                                                             Math.cos(
+  //                                                                                                                 driverXbox.getRawAxis(
+  //                                                                                                                     2) *
+  //                                                                                                                 Math.PI) *
+  //                                                                                                             (Math.PI *
+  //                                                                                                              2))
+  //                                                                              .headingWhile(true);
 
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
   Command intakeCollect = new IntakeCommand(intake, -0.3);
+  Command intakeEject = new IntakeCommand(intake, 0.5);
+  Command intakePulse = new IntakeCommand(intake, -0.1);
   Command intakeFeed = new IntakeCommand(intake, -0.3);
   // Command intakeLaunch = new IntakeCommand(intake, -1.0);
 
   // Wrist position commands
+  Command wristStow = new MoveWristCommand(wrist, 0);
   Command wristGroundIntake = new MoveWristCommand(wrist, 1);
   Command wristHold = new MoveWristCommand(wrist, 2);  
-  Command wristReefIntake = new MoveWristCommand(wrist, 4);
-  Command wristLaunch = new MoveWristCommand(wrist, 2);
-  Command wristCoralTop = new MoveWristCommand(wrist, 3);
   Command wristProcessor = new MoveWristCommand(wrist, 3);
+  Command wristReefIntake = new MoveWristCommand(wrist, 4);
+  Command wristLaunch = new MoveWristCommand(wrist, 6);
+  // Command wristCoralTop = new MoveWristCommand(wrist, 7);
+  
   
   // Elevator position commands
   Command elevatorGroundIntake = new ElevatorCommand(elevator, 1);
@@ -128,11 +133,13 @@ public class RobotContainer
   Command feederStill = new FeederCommand(feeder, 0);
   
   // Launcher commands
-  Command launchDelay = new WaitCommand(0.5);
+  Command launchDelay = new WaitCommand(1.0);
   Command launchGamepiece = new LauncherCommand(launcher, -0.5);
   Command launchStill = new LauncherCommand(launcher, 0);
   
   //Swerve Commands
+  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+  Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
   // Command autoDriveCommand = new AbsoluteDriveAdv(drivebase,
   //                                                                 () -> -autoXV,
   //                                                                 () -> -autoYV,
@@ -142,14 +149,14 @@ public class RobotContainer
   //                                                                 () -> false,
   //                                                                 () -> false);
   
-  Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
-                                                        () -> driverXbox.getLeftY() * -1,
-                                                        () -> driverXbox.getLeftX() * -1,
-                                                        () -> driverXbox.getRightX(),
-                                                        () -> driverXbox.getHID().getYButtonPressed(),
-                                                        () -> driverXbox.getHID().getAButtonPressed(),
-                                                        () -> driverXbox.getHID().getXButtonPressed(),
-                                                        () -> driverXbox.getHID().getBButtonPressed());
+  // Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
+  //                                                       () -> driverXbox.getLeftY() * -1,
+  //                                                       () -> driverXbox.getLeftX() * -1,
+  //                                                       () -> driverXbox.getRightX(),
+  //                                                       () -> driverXbox.getHID().getYButtonPressed(),
+  //                                                       () -> driverXbox.getHID().getAButtonPressed(),
+  //                                                       () -> driverXbox.getHID().getXButtonPressed(),
+  //                                                       () -> driverXbox.getHID().getBButtonPressed());
           
 
   
@@ -158,9 +165,11 @@ public class RobotContainer
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    drivebase.setDefaultCommand(driveWithHeadingSnaps);
+    // drivebase.setDefaultCommand(driveWithHeadingSnaps);
+    // drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
+    drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     intake.setDefaultCommand(intakeStill);
-    wrist.setDefaultCommand(wristHold);
+    wrist.setDefaultCommand(wristStow);
     feeder.setDefaultCommand(feederStill);
     launcher.setDefaultCommand(launchStill);
   }
@@ -168,80 +177,16 @@ public class RobotContainer
   
   private void configureBindings()
   {
+    // Driver Bindings
+    driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
 
-    // Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-    // Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
-    // Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(
-    //     driveDirectAngle);
-    // Command driveFieldOrientedDirectAngleKeyboard      = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
-    // Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
-    // Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
-    //     driveDirectAngleKeyboard);
 
-    // if (RobotBase.isSimulation())
-    // {
-    //   drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
-    // } else
-    // {
-    //   drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    // }
+    // Oerator Bindings
+    operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake).until(() -> IntakeSubsystem.algaeCollected()).andThen(wristHold).andThen(intakePulse).until(() -> IntakeSubsystem.algaeCollected())); // I think this will cause intake to go still and wrist to retract then pulse again?
+    operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
 
-    // if (Robot.isSimulation())
-    // {
-    //   driveDirectAngleKeyboard.driveToPose(() -> new Pose2d(new Translation2d(9, 3),
-    //                                                         Rotation2d.fromDegrees(90)),
-    //                                        new ProfiledPIDController(5,
-    //                                                                  0,
-    //                                                                  0,
-    //                                                                  new Constraints(5,
-    //                                                                                  3)),
-    //                                        new ProfiledPIDController(5,
-    //                                                                  0,
-    //                                                                  0,
-    //                                                                  new Constraints(
-    //                                                                      Math.toRadians(
-    //                                                                          360),
-    //                                                                      Math.toRadians(
-    //                                                                          90))));
-    //   driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-    //   driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
-    //   driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
-    //                                                  () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
-
-    // }
-    // if (DriverStation.isTest())
-    // {
-    //   drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
-
-    //   driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-    //   driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-    //   driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    //   driverXbox.back().whileTrue(drivebase.centerModulesCommand());
-    //   driverXbox.leftBumper().onTrue(Commands.none());
-    //   driverXbox.rightBumper().onTrue(Commands.none());
-    // } else
-    // {
-    //   driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    //   driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-    //   driverXbox.b().whileTrue(
-    //       drivebase.driveToPose(
-    //           new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-    //                           );
-    //   driverXbox.start().whileTrue(Commands.none());
-    //   driverXbox.back().whileTrue(Commands.none());
-    //   driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-    //   driverXbox.rightBumper().onTrue(Commands.none());
-    // }
-
-    // operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake));
-    // if(!IntakeSubsystem.algaeCollected()) {
-    //       // operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake));
-    // }
-
-    operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake).until(() -> IntakeSubsystem.algaeCollected()).andThen(wristHold)); // I think this will cause intake to go still and wrist to retract
-    
-    if(ElevatorSubsystem.currentPosition == Constants.ElevatorConstants.elevatorLaunchPosition){
-      operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch))));
+    if(ElevatorSubsystem.currentPosition > Constants.ElevatorConstants.elevatorLaunchPosition){
+      operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(wristLaunch.alongWith(intakeFeed.alongWith(feederLaunch)))));
     }
 
     operatorXbox.a().onTrue(elevatorGroundIntake);
