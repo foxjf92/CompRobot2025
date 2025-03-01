@@ -70,7 +70,7 @@ public class RobotContainer
   Command intakeEject = new IntakeCommand(intake, 0.5);
   Command intakePulse = new IntakeCommand(intake, -0.1);
   Command intakeFeed = new IntakeCommand(intake, -0.3);
-  // Command intakeLaunch = new IntakeCommand(intake, -1.0);
+  Command intakeAuto = new IntakeCommand(intake, -0.3);
 
   // Wrist position commands
   Command wristStow = new MoveWristCommand(wrist, 0);
@@ -79,6 +79,8 @@ public class RobotContainer
   Command wristProcessor = new MoveWristCommand(wrist, 3);
   Command wristReefIntake = new MoveWristCommand(wrist, 4);
   Command wristLaunch = new MoveWristCommand(wrist, 6);
+  Command wristAutoReef = new MoveWristCommand(wrist, 4);
+
   // Command wristCoralTop = new MoveWristCommand(wrist, 7);
   
   
@@ -87,6 +89,7 @@ public class RobotContainer
   Command elevatorL2Intake = new ElevatorCommand(elevator, 3);  
   Command elevatorL3Intake = new ElevatorCommand(elevator, 4);
   Command elevatorLaunch = new ElevatorCommand(elevator, 5);
+  Command elevatorAutoReef = new ElevatorCommand(elevator, 3);
   //Command elevatorCoralTop = new ElevatorCommand(elevator, 3);
  // Command elevatorProcessor = new ElevatorCommand(elevator, 3);
   //Command elevatorClimb = new ElevatorCommand(elevator, 3);
@@ -109,12 +112,21 @@ public class RobotContainer
   private double autoRotation = 0.0;
 
   Command driveAuto = new AbsoluteFieldDrive(drivebase,
-                                                                  () -> autoXV,
-                                                                  () -> -autoYV,
-                                                                  () -> -autoRotation)
-                                                                  .withTimeout(5.0);
-  
+                                              () -> autoXV,
+                                              () -> -autoYV,
+                                              () -> -autoRotation)
+                                              .withTimeout(5.0);
 
+  Command driveAndReefAuto = new AbsoluteFieldDrive(drivebase,
+                                                    () -> autoXV,
+                                                    () -> -autoYV,
+                                                    () -> -autoRotation)
+                                                    .withTimeout(5.0)
+                                                    .alongWith(elevatorAutoReef
+                                                    .alongWith(wristAutoReef)
+                                                    .alongWith(intakeAuto)
+                                                    .until(() -> IntakeSubsystem.algaeCollected()));
+  
   // Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
   //                                                       () -> driverXbox.getLeftY() * -1,
   //                                                       () -> driverXbox.getLeftX() * -1,
@@ -149,7 +161,9 @@ public class RobotContainer
     // Oerator Bindings
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
       .alongWith(intakeCollect)
-      .until(() -> IntakeSubsystem.algaeCollected()));  
+      .until(() -> IntakeSubsystem.algaeCollected()));
+    
+  
 
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(wristLaunch.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch)))));
@@ -174,6 +188,7 @@ public class RobotContainer
   {
     // return null;
     return driveAuto;
+    // return driveAndReefAuto;
 
   }
 
