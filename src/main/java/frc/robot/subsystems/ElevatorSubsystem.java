@@ -66,10 +66,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorLeft.set(-speed);
   }
 
+  public boolean checkGroundPosition(){
+    if(currentPosition > -10.0)
+      return true;
+    else
+      return false;
+  }
+
   @Override
   public void periodic() {
     currentPosition = elevatorRightEncoder.getPosition();
-    SmartDashboard.putNumber("Elevator Position: ", currentPosition);
+    SmartDashboard.putNumber("Elevator Current Position: ", currentPosition);
     SmartDashboard.putNumber("Elevator Setpoint", ElevatorCommand.elevatorSetpoint);
   }
 

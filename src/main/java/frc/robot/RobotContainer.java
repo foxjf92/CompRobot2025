@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -69,44 +70,12 @@ public class RobotContainer
                                                                                              driverXbox::getRightY)
                                                            .headingWhile(true);
 
-  // /**
-  //  * Clone's the angular velocity input stream and converts it to a robotRelative input stream.
-  //  */
-  // SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-  //                                                            .allianceRelativeControl(false);
-
-  // SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-  //                                                                       () -> -driverXbox.getLeftY(),
-  //                                                                       () -> -driverXbox.getLeftX())
-  //                                                                   .withControllerRotationAxis(() -> driverXbox.getRawAxis(
-  //                                                                       2))
-  //                                                                   .deadband(OperatorConstants.DEADBAND)
-  //                                                                   .scaleTranslation(0.8)
-  //                                                                   .allianceRelativeControl(true);
-  // // Derive the heading axis with math!
-  // SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
-  //                                                                              .withControllerHeadingAxis(() ->
-  //                                                                                                             Math.sin(
-  //                                                                                                                 driverXbox.getRawAxis(
-  //                                                                                                                     2) *
-  //                                                                                                                 Math.PI) *
-  //                                                                                                             (Math.PI *
-  //                                                                                                              2),
-  //                                                                                                         () ->
-  //                                                                                                             Math.cos(
-  //                                                                                                                 driverXbox.getRawAxis(
-  //                                                                                                                     2) *
-  //                                                                                                                 Math.PI) *
-  //                                                                                                             (Math.PI *
-  //                                                                                                              2))
-  //                                                                              .headingWhile(true);
-
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
   Command intakeCollect = new IntakeCommand(intake, -0.3);
   Command intakeEject = new IntakeCommand(intake, 0.5);
   Command intakePulse = new IntakeCommand(intake, -0.1);
-  Command intakeFeed = new IntakeCommand(intake, -0.3);
+  Command intakeFeed = new IntakeCommand(intake, -0.8);
   // Command intakeLaunch = new IntakeCommand(intake, -1.0);
 
   // Wrist position commands
@@ -149,14 +118,14 @@ public class RobotContainer
   //                                                                 () -> false,
   //                                                                 () -> false);
   
-  // Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
-  //                                                       () -> driverXbox.getLeftY() * -1,
-  //                                                       () -> driverXbox.getLeftX() * -1,
-  //                                                       () -> driverXbox.getRightX(),
-  //                                                       () -> driverXbox.getHID().getYButtonPressed(),
-  //                                                       () -> driverXbox.getHID().getAButtonPressed(),
-  //                                                       () -> driverXbox.getHID().getXButtonPressed(),
-  //                                                       () -> driverXbox.getHID().getBButtonPressed());
+  Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
+                                                        () -> driverXbox.getLeftY() * -1,
+                                                        () -> driverXbox.getLeftX() * -1,
+                                                        () -> driverXbox.getRightX(),
+                                                        () -> driverXbox.getHID().getYButtonPressed(),
+                                                        () -> driverXbox.getHID().getAButtonPressed(),
+                                                        () -> driverXbox.getHID().getXButtonPressed(),
+                                                        () -> driverXbox.getHID().getBButtonPressed());
           
 
   
@@ -180,23 +149,20 @@ public class RobotContainer
     // Driver Bindings
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
 
-
     // Oerator Bindings
+    operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
+      .alongWith(intakeCollect)
+      .until(() -> IntakeSubsystem.algaeCollected()));
 
-    operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake).until(() -> IntakeSubsystem.algaeCollected())); 
-
-    if(ElevatorSubsystem.currentPosition > -10) {
-      operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake).until(() -> IntakeSubsystem.algaeCollected())); 
-    }
-    if(ElevatorSubsystem.currentPosition < -10) {
-      operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristReefIntake).until(() -> IntakeSubsystem.algaeCollected())); 
-    }
+  
 
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
+    operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(wristLaunch.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch)))));
 
-    if(ElevatorSubsystem.currentPosition > Constants.ElevatorConstants.elevatorLaunchPosition){
-      operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(wristLaunch.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch)))));
-    }
+
+    // if(ElevatorSubsystem.currentPosition < Constants.ElevatorConstants.elevatorLaunchClearance){
+    //   operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(wristLaunch.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch)))));
+    // }
 
     operatorXbox.a().onTrue(elevatorGroundIntake);
     operatorXbox.x().onTrue(elevatorL2Intake);
