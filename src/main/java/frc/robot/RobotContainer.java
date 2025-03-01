@@ -69,7 +69,7 @@ public class RobotContainer
   Command intakeCollect = new IntakeCommand(intake, -0.3);
   Command intakeEject = new IntakeCommand(intake, 0.5);
   Command intakePulse = new IntakeCommand(intake, -0.1);
-  Command intakeFeed = new IntakeCommand(intake, -0.8);
+  Command intakeFeed = new IntakeCommand(intake, -0.3);
   // Command intakeLaunch = new IntakeCommand(intake, -1.0);
 
   // Wrist position commands
@@ -97,31 +97,32 @@ public class RobotContainer
   
   // Launcher commands
   Command launchDelay = new WaitCommand(1.0);
-  Command launchGamepiece = new LauncherCommand(launcher, -0.5);
+  Command launchGamepiece = new LauncherCommand(launcher, -0.45);
   Command launchStill = new LauncherCommand(launcher, 0);
   
   //Swerve Commands
   Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
   Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
   
-  private double autoXV = 0.25;
+  private double autoXV = 0.5;
   private double autoYV = 0.0;  
   private double autoRotation = 0.0;
 
   Command driveAuto = new AbsoluteFieldDrive(drivebase,
-                                                                  () -> -autoXV,
+                                                                  () -> autoXV,
                                                                   () -> -autoYV,
-                                                                  () -> -autoRotation);
+                                                                  () -> -autoRotation)
+                                                                  .withTimeout(5.0);
   
 
-  Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
-                                                        () -> driverXbox.getLeftY() * -1,
-                                                        () -> driverXbox.getLeftX() * -1,
-                                                        () -> driverXbox.getRightX(),
-                                                        () -> driverXbox.getHID().getYButtonPressed(),
-                                                        () -> driverXbox.getHID().getAButtonPressed(),
-                                                        () -> driverXbox.getHID().getXButtonPressed(),
-                                                        () -> driverXbox.getHID().getBButtonPressed());
+  // Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
+  //                                                       () -> driverXbox.getLeftY() * -1,
+  //                                                       () -> driverXbox.getLeftX() * -1,
+  //                                                       () -> driverXbox.getRightX(),
+  //                                                       () -> driverXbox.getHID().getYButtonPressed(),
+  //                                                       () -> driverXbox.getHID().getAButtonPressed(),
+  //                                                       () -> driverXbox.getHID().getXButtonPressed(),
+  //                                                       () -> driverXbox.getHID().getBButtonPressed());
           
 
   
@@ -146,6 +147,9 @@ public class RobotContainer
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
 
     // Oerator Bindings
+    // operatorXbox.rightBumper().whileTrue(intakeCollect);
+    // operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
+    //   .alongWith(intakeCollect));
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
       .alongWith(intakeCollect)
       .until(() -> IntakeSubsystem.algaeCollected()));
@@ -164,7 +168,6 @@ public class RobotContainer
     operatorXbox.x().onTrue(elevatorL2Intake);
     operatorXbox.y().onTrue(elevatorL3Intake);
     operatorXbox.b().onTrue(elevatorLaunch);
-    
   }
 
   /**
@@ -175,7 +178,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // return null;
-    return driveAuto.withTimeout(4.0);
+    return driveAuto;
 
   }
 
