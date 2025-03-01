@@ -147,12 +147,12 @@ public class RobotContainer
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
 
     // Oerator Bindings
-    // operatorXbox.rightBumper().whileTrue(intakeCollect);
     // operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
-    //   .alongWith(intakeCollect));
+    //   .alongWith(intakeCollect)
+    //   .until(() -> IntakeSubsystem.algaeCollected()));
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
-      .alongWith(intakeCollect)
-      .until(() -> IntakeSubsystem.algaeCollected()));
+      .alongWith(intakeCollect.until(() -> IntakeSubsystem.algaeCollected()))
+      .andThen(new InstantCommand(() -> intake.spinIntake(-0.3))).withTimeout(0.25));
 
   
 
