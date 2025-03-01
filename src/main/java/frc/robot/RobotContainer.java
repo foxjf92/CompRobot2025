@@ -18,6 +18,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LauncherCommand;
 import frc.robot.commands.MoveWristCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -102,15 +103,17 @@ public class RobotContainer
   //Swerve Commands
   Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
   Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
-  // Command autoDriveCommand = new AbsoluteDriveAdv(drivebase,
-  //                                                                 () -> -autoXV,
-  //                                                                 () -> -autoYV,
-  //                                                                 () -> -autoRotation,
-  //                                                                 () -> false,
-  //                                                                 () -> false,
-  //                                                                 () -> false,
-  //                                                                 () -> false);
   
+  private double autoXV = 0.25;
+  private double autoYV = 0.0;  
+  private double autoRotation = 0.0;
+
+  Command driveAuto = new AbsoluteFieldDrive(drivebase,
+                                                                  () -> -autoXV,
+                                                                  () -> -autoYV,
+                                                                  () -> -autoRotation);
+  
+
   Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
                                                         () -> driverXbox.getLeftY() * -1,
                                                         () -> driverXbox.getLeftX() * -1,
@@ -171,8 +174,9 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-    // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Auto");
+    // return null;
+    return driveAuto.withTimeout(4.0);
+
   }
 
   public void setMotorBrake(boolean brake)
