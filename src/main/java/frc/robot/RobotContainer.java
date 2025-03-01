@@ -166,8 +166,8 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     // drivebase.setDefaultCommand(driveWithHeadingSnaps);
-    // drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-    drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
+    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     intake.setDefaultCommand(intakeStill);
     wrist.setDefaultCommand(wristStow);
     feeder.setDefaultCommand(feederStill);
@@ -182,11 +182,20 @@ public class RobotContainer
 
 
     // Oerator Bindings
-    operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake).until(() -> IntakeSubsystem.algaeCollected()).andThen(wristHold).andThen(intakePulse).until(() -> IntakeSubsystem.algaeCollected())); // I think this will cause intake to go still and wrist to retract then pulse again?
+
+    operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake).until(() -> IntakeSubsystem.algaeCollected())); 
+
+    if(ElevatorSubsystem.currentPosition > -10) {
+      operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristGroundIntake).until(() -> IntakeSubsystem.algaeCollected())); 
+    }
+    if(ElevatorSubsystem.currentPosition < -10) {
+      operatorXbox.rightBumper().whileTrue(intakeCollect.alongWith(wristReefIntake).until(() -> IntakeSubsystem.algaeCollected())); 
+    }
+
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
 
     if(ElevatorSubsystem.currentPosition > Constants.ElevatorConstants.elevatorLaunchPosition){
-      operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(wristLaunch.alongWith(intakeFeed.alongWith(feederLaunch)))));
+      operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(wristLaunch.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch)))));
     }
 
     operatorXbox.a().onTrue(elevatorGroundIntake);
@@ -194,10 +203,6 @@ public class RobotContainer
     operatorXbox.y().onTrue(elevatorL3Intake);
     operatorXbox.b().onTrue(elevatorLaunch);
     
-    // operatorXbox.a().onTrue(wristGroundIntake);
-    // operatorXbox.x().onTrue(wristReefIntake);
-    // operatorXbox.y().onTrue(wristHold);
-
   }
 
   /**

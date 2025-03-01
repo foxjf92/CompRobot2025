@@ -11,7 +11,7 @@ public class MoveWristCommand extends Command{
     private int targetPosition; //Symbolic arm position where 1 = ground intake, 2 = amp position, 3 = launch position
     public static double wristSetpoint; // Encoder position value that corresponds to arm position
 
-    public final double kP = 0.01; //2nd 
+    public final double kP = 0.04; //2nd 
     public final double kI = 0.0; //4th
     public final double kD = 0.0; //3rd
     public final double arbFF = 0.0; // Start Here
@@ -42,7 +42,7 @@ public class MoveWristCommand extends Command{
             wristSetpoint = WristConstants.wristProcessorPosiiton;
         }
         if (targetPosition == 4) {
-            wristSetpoint = WristConstants.wristL2IntakePosition;
+            wristSetpoint = WristConstants.wristReefIntakePosition;
         }
         // if (targetPosition == 5) {
         //     wristSetpoint = WristConstants.wristL3IntakePosition;
