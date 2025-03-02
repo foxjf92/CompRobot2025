@@ -90,9 +90,9 @@ public class RobotContainer
   Command elevatorL3Intake = new ElevatorCommand(elevator, 4);
   Command elevatorLaunch = new ElevatorCommand(elevator, 5);
   Command elevatorAutoReef = new ElevatorCommand(elevator, 3);
-  //Command elevatorCoralTop = new ElevatorCommand(elevator, 3);
- // Command elevatorProcessor = new ElevatorCommand(elevator, 3);
-  //Command elevatorClimb = new ElevatorCommand(elevator, 3);
+  // Command elevatorCoralTop = new ElevatorCommand(elevator, 3);
+  // Command elevatorProcessor = new ElevatorCommand(elevator, 3);
+  // Command elevatorClimb = new ElevatorCommand(elevator, 3);
 
   // Feeder commands
   Command feederLaunch = new FeederCommand(feeder, -0.3);
@@ -117,26 +117,20 @@ public class RobotContainer
                                               () -> -autoRotation)
                                               .withTimeout(5.0);
 
-  Command driveAndReefAuto = new AbsoluteFieldDrive(drivebase,
-                                                    () -> autoXV,
-                                                    () -> -autoYV,
-                                                    () -> -autoRotation)
-                                                    .alongWith(elevatorAutoReef
-                                                    .alongWith(wristAutoReef)
-                                                    .alongWith(intakeAuto))
-                                                    .until(() -> IntakeSubsystem.algaeCollected());
+  Command autoReefCollect = elevatorAutoReef
+                            .alongWith(wristAutoReef)
+                            .alongWith(intakeAuto)
+                            .until(IntakeSubsystem::algaeCollected);
   
-  // Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
-  //                                                       () -> driverXbox.getLeftY() * -1,
-  //                                                       () -> driverXbox.getLeftX() * -1,
-  //                                                       () -> driverXbox.getRightX(),
-  //                                                       () -> driverXbox.getHID().getYButtonPressed(),
-  //                                                       () -> driverXbox.getHID().getAButtonPressed(),
-  //                                                       () -> driverXbox.getHID().getXButtonPressed(),
-  //                                                       () -> driverXbox.getHID().getBButtonPressed());
+  Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
+                                                        () -> driverXbox.getLeftY() * -1,
+                                                        () -> driverXbox.getLeftX() * -1,
+                                                        () -> driverXbox.getRightX(),
+                                                        () -> driverXbox.getHID().getYButtonPressed(),
+                                                        () -> driverXbox.getHID().getAButtonPressed(),
+                                                        () -> driverXbox.getHID().getXButtonPressed(),
+                                                        () -> driverXbox.getHID().getBButtonPressed());
           
-
-  
   public RobotContainer()
   {
     // Configure the trigger bindings
@@ -159,18 +153,15 @@ public class RobotContainer
 
     // Oerator Bindings
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
-      .alongWith(intakeCollect)
-      .until(() -> IntakeSubsystem.algaeCollected()));
-    
-  
+                              .alongWith(intakeCollect)
+                              .until(() -> IntakeSubsystem.algaeCollected()));
 
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
-    operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(wristLaunch.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch)))));
-
-
-    // if(ElevatorSubsystem.currentPosition < Constants.ElevatorConstants.elevatorLaunchClearance){
-    //   operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(wristLaunch.alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch)))));
-    // }
+    operatorXbox.rightTrigger().whileTrue(launchGamepiece
+                                .alongWith(wristLaunch
+                                .alongWith(launchDelay
+                                    .andThen(intakeFeed
+                                    .alongWith(feederLaunch)))));
 
     operatorXbox.a().onTrue(elevatorGroundIntake);
     operatorXbox.x().onTrue(elevatorL2Intake);
@@ -186,8 +177,8 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // return null;
-    return driveAuto;
-    // return driveAndReefAuto;
+    // return driveAuto;
+    return driveAuto.raceWith(autoReefCollect);
 
   }
 
