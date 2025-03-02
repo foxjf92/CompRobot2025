@@ -121,11 +121,10 @@ public class RobotContainer
                                                     () -> autoXV,
                                                     () -> -autoYV,
                                                     () -> -autoRotation)
-                                                    .withTimeout(5.0)
                                                     .alongWith(elevatorAutoReef
                                                     .alongWith(wristAutoReef)
-                                                    .alongWith(intakeAuto)
-                                                    .until(() -> IntakeSubsystem.algaeCollected()));
+                                                    .alongWith(intakeAuto))
+                                                    .until(() -> IntakeSubsystem.algaeCollected());
   
   // Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
   //                                                       () -> driverXbox.getLeftY() * -1,
