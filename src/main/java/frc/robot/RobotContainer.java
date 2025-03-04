@@ -104,8 +104,9 @@ public class RobotContainer
   Command launchStill = new LauncherCommand(launcher, 0);
   
   //Swerve Commands
-  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-  Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
+ Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+  // Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
+  Command alignDrive = new AbsoluteFieldDrive(drivebase, () -> 0, () -> 0, () -> 0, () -> true);
   
   private double autoXV = 0.5;
   private double autoYV = 0.0;  
@@ -114,8 +115,9 @@ public class RobotContainer
   Command driveAuto = new AbsoluteFieldDrive(drivebase,
                                               () -> autoXV,
                                               () -> -autoYV,
-                                              () -> -autoRotation)
-                                              .withTimeout(5.0);
+                                              () -> -autoRotation,
+                                              () -> false)
+                                              .withTimeout(7.0);
 
   Command autoReefCollect = elevatorAutoReef
                             .alongWith(wristAutoReef)
@@ -150,11 +152,15 @@ public class RobotContainer
   {
     // Driver Bindings
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
+    driverXbox.rightBumper().whileTrue(alignDrive);
 
     // Oerator Bindings
+    // operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
+    //                           .alongWith(intakeCollect)
+    //                           .until(() -> IntakeSubsystem.algaeCollected()));
+
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
-                              .alongWith(intakeCollect)
-                              .until(() -> IntakeSubsystem.algaeCollected()));
+                              .alongWith(intakeCollect));
 
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
     operatorXbox.rightTrigger().whileTrue(launchGamepiece
@@ -177,8 +183,8 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // return null;
-    // return driveAuto;
-    return driveAuto.raceWith(autoReefCollect);
+    return driveAuto;
+    // return driveAuto.raceWith(autoReefCollect);
 
   }
 
