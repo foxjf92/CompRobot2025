@@ -66,7 +66,7 @@ public class RobotContainer
 
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
-  Command intakeCollect = new IntakeCommand(intake, -0.3);
+  Command intakeCollect = new IntakeCommand(intake, -0.9);
   Command intakeEject = new IntakeCommand(intake, 0.5);
   Command intakePulse = new IntakeCommand(intake, -0.1);
   Command intakeFeed = new IntakeCommand(intake, -0.3);
@@ -95,7 +95,7 @@ public class RobotContainer
   // Command elevatorClimb = new ElevatorCommand(elevator, 3);
 
   // Feeder commands
-  Command feederLaunch = new FeederCommand(feeder, -0.3);
+  Command feederLaunch = new FeederCommand(feeder, -0.9);
   Command feederStill = new FeederCommand(feeder, 0);
   
   // Launcher commands
@@ -104,9 +104,9 @@ public class RobotContainer
   Command launchStill = new LauncherCommand(launcher, 0);
   
   //Swerve Commands
- Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
   // Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
-  Command alignDrive = new AbsoluteFieldDrive(drivebase, () -> 0, () -> 0, () -> 0, () -> true);
+  // Command alignDrive = new AbsoluteFieldDrive(drivebase, () -> 0, () -> 0, () -> 0, () -> true);
   
   private double autoXV = 0.5;
   private double autoYV = 0.0;  
@@ -152,7 +152,7 @@ public class RobotContainer
   {
     // Driver Bindings
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
-    driverXbox.rightBumper().whileTrue(alignDrive);
+    // driverXbox.rightBumper().whileTrue(alignDrive);
 
     // Oerator Bindings
     // operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
@@ -160,7 +160,8 @@ public class RobotContainer
     //                           .until(() -> IntakeSubsystem.algaeCollected()));
 
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
-                              .alongWith(intakeCollect));
+                              .alongWith(intakeCollect)
+                              .until(() -> IntakeSubsystem.algaeCollected()));
 
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
     operatorXbox.rightTrigger().whileTrue(launchGamepiece

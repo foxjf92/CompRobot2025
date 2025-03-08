@@ -49,12 +49,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void spinIntake(double speed){
     frontIntakeRoller.set(speed);
-    backIntakeRoller.set(-speed*backRollerMultiplier);
+    backIntakeRoller.set(-speed);
   }
 
   @Override
   public void periodic() {
-    if(algaeSensor.getVoltage() > 1.0) {
+    if(algaeSensor.getVoltage() > 0.1) {
       algaeCollectedStatus = false;
     }
     else {
