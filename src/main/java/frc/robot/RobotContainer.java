@@ -166,22 +166,25 @@ public class RobotContainer
                             .alongWith(wristAutoReef
                             .alongWith(intakeAutoCollect))
                             .until(IntakeSubsystem::algaeCollected)
-                            .andThen(wristAutoStow
-                            .alongWith(intakeAutoStill));
+                              .andThen(wristAutoStow
+                              .alongWith(intakeAutoStill));
 
   Command autoLaunchCommand = autoLaunchGamepiece
                                 .alongWith(elevatorAutoLaunch
                                 .alongWith(wristAutoLaunch
                                 .alongWith(autoLaunchDelay
-                                    .andThen(intakeAutoFeed
-                                    .alongWith(feederAutoLaunch)))));
+                                  .andThen(intakeAutoFeed
+                                  .alongWith(feederAutoLaunch)))));
                                 
   // Auto Sequences
   // Command autoCollectAndLaunchSequence = autoReefCollect.withTimeout(5.0)
   //                                         .andThen(autoLaunchCommand).withTimeout(2.0);
   Command autoCollectAndMoveSequence = autoDriveStraightCollect
                                         .alongWith(autoReefCollect)
-                                        .andThen(autoDriveSideways);
+                                          .andThen(autoDriveSideways);
+  // Command autoCollectAndMoveSequence = autoDriveStraightCollect
+  //                                       .withDeadline(autoReefCollect)
+  //                                         .andThen(autoDriveSideways); // TODO see if this command works for sequence
 
 
   public RobotContainer()
