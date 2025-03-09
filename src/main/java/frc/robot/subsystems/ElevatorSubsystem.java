@@ -27,7 +27,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private SparkMaxConfig elevatorLeftConfig;
   private SparkMaxConfig elevatorRightConfig;
 
-  private double rampRate = 0.2;
+  private double rampRate = 0.4; // was .2, doubled to try and observe effect
 
   public RelativeEncoder elevatorRightEncoder;
 
@@ -76,8 +76,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     currentPosition = elevatorRightEncoder.getPosition();
-    SmartDashboard.putNumber("Elevator Current Position: ", currentPosition);
-    SmartDashboard.putNumber("Elevator Setpoint", ElevatorCommand.elevatorSetpoint);
+    // SmartDashboard.putNumber("Elevator Current Position: ", currentPosition);
+    // SmartDashboard.putNumber("Elevator Setpoint", ElevatorCommand.elevatorSetpoint);
   }
 
 }

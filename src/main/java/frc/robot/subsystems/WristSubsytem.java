@@ -46,8 +46,8 @@ public class WristSubsytem extends SubsystemBase {
   public void periodic() {
     currentPosition = wristEncoder.getPosition();
 
-    SmartDashboard.putNumber("Wrist Position", currentPosition);
-    SmartDashboard.putNumber("Wrist Setpoint", MoveWristCommand.wristSetpoint);
+    // SmartDashboard.putNumber("Wrist Position", currentPosition);
+    // SmartDashboard.putNumber("Wrist Setpoint", MoveWristCommand.wristSetpoint);
   }
 
   @Override
