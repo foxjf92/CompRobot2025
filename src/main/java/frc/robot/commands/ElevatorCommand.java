@@ -33,29 +33,29 @@ public class ElevatorCommand extends Command {
         if (targetPosition == 1) {
             elevatorSetpoint = ElevatorConstants.elevatorGroundIntakePosition; // Set in Constants
         }
-        if (targetPosition == 2) {
-            elevatorSetpoint = ElevatorConstants.elevatorCoralTopIntakePosition; // Set in Constants
-        }
+        // if (targetPosition == 2) {
+        //     elevatorSetpoint = ElevatorConstants.elevatorCoralTopIntakePosition; // Set in Constants
+        // }
         if (targetPosition == 3) {
-            elevatorSetpoint = ElevatorConstants.elevatorL2IntakePosition; // TODO
+            elevatorSetpoint = ElevatorConstants.elevatorL2IntakePosition; 
         }
         if (targetPosition == 4) {
-            elevatorSetpoint = ElevatorConstants.eleavtorL3IntakePosition; // TODO
+            elevatorSetpoint = ElevatorConstants.eleavtorL3IntakePosition;
         }
         if (targetPosition == 5) {
-            elevatorSetpoint = ElevatorConstants.elevatorLaunchPosition; // TODO
+            elevatorSetpoint = ElevatorConstants.elevatorLaunchPosition;
         }
-        if (targetPosition == 6) {
-            elevatorSetpoint = ElevatorConstants.elevatorProcessorPosiiton; // TODO
-        }
-        if (targetPosition == 7) {
-            elevatorSetpoint = ElevatorConstants.elevatorClimbPosition; // TODO
-        }
+        // if (targetPosition == 6) {
+        //     elevatorSetpoint = ElevatorConstants.elevatorProcessorPosiiton; 
+        // }
+        // if (targetPosition == 7) {
+        //     elevatorSetpoint = ElevatorConstants.elevatorClimbPosition;
+        // }
     }
 
     @Override
     public void execute() {
-        double controlEffort = - arbFF + m_elevatorPID.calculate(m_elevator.elevatorRightEncoder.getPosition(), elevatorSetpoint); // adds FF input to fight gravity, subtract PID output due to encoder inversion TODO check inversion
+        double controlEffort = - arbFF + m_elevatorPID.calculate(m_elevator.elevatorRightEncoder.getPosition(), elevatorSetpoint); // adds FF input to fight gravity, negative encoder is up
 
         m_elevator.moveElevator(controlEffort);
     }

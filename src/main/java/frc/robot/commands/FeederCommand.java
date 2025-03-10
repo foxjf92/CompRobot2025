@@ -16,7 +16,6 @@ public class FeederCommand extends Command{
       feedSpeed = speed; 
       addRequirements(m_feeder);
   }
-  
 
   @Override
   public void initialize(){}

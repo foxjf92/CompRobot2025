@@ -123,16 +123,16 @@ public class RobotContainer
   // Command alignDrive = new AbsoluteFieldDrive(drivebase, () -> 0, () -> 0, () -> 0, () -> true);
   
   Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
-                                                                   () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
-                                                                                                OperatorConstants.DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
-                                                                                                OperatorConstants.DEADBAND),
-                                                                   () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
-                                                                   driverXbox.getHID()::getYButtonPressed,
-                                                                   driverXbox.getHID()::getAButtonPressed,
-                                                                   driverXbox.getHID()::getXButtonPressed,
-                                                                   driverXbox.getHID()::getBButtonPressed);
+                                              () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                                                          OperatorConstants.DEADBAND),
+                                              () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                                                          OperatorConstants.DEADBAND),
+                                              () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                                                          OperatorConstants.RIGHT_X_DEADBAND),
+                                              driverXbox.getHID()::getYButtonPressed,
+                                              driverXbox.getHID()::getAButtonPressed,
+                                              driverXbox.getHID()::getXButtonPressed,
+                                              driverXbox.getHID()::getBButtonPressed);
 
   // Auto Commands
   private double autoDriveStraightX = 0.5;
@@ -146,8 +146,7 @@ public class RobotContainer
                                               () -> -autoDriveStraightX,
                                               () -> -autoDriveStraightY,
                                               () -> -autoRotation,
-                                              () -> false)
-                                              .withTimeout(7.0);
+                                              () -> false).withTimeout(7.0);
 
   Command autoDriveStraightCollect = new AbsoluteFieldDrive(drivebase,
                                               () -> -autoDriveStraightX,
@@ -155,36 +154,43 @@ public class RobotContainer
                                               () -> -autoRotation,
                                               () -> false).withTimeout(7.0);
 
-  Command autoDriveSideways = new AbsoluteFieldDrive(drivebase,
+  Command autoDriveSidewaysToLaunch = new AbsoluteFieldDrive(drivebase,
                                               () -> autoDriveSidewaysX,
                                               () -> autoDriveSidewaysY,
                                               () -> -autoRotation,
-                                              () -> false)
-                                              .withTimeout(5.0);
+                                              () -> false).withTimeout(5.0);
 
   Command autoReefCollect = elevatorAutoReef
-                            .alongWith(wristAutoReef
-                            .alongWith(intakeAutoCollect))
-                            .until(IntakeSubsystem::algaeCollected)
-                              .andThen(wristAutoStow
-                              .alongWith(intakeAutoStill));
+                              .alongWith(wristAutoReef
+                              .alongWith(intakeAutoCollect)).until(IntakeSubsystem::algaeCollected)
+                                .andThen(wristAutoStow
+                                          .alongWith(intakeAutoStill))
+                                .withTimeout(5.0);
 
   Command autoLaunchCommand = autoLaunchGamepiece
                                 .alongWith(elevatorAutoLaunch
                                 .alongWith(wristAutoLaunch
                                 .alongWith(autoLaunchDelay
                                   .andThen(intakeAutoFeed
-                                  .alongWith(feederAutoLaunch)))));
+                                            .alongWith(feederAutoLaunch)))))
+                                            .withTimeout(3.0);
                                 
   // Auto Sequences
-  // Command autoCollectAndLaunchSequence = autoReefCollect.withTimeout(5.0)
-  //                                         .andThen(autoLaunchCommand).withTimeout(2.0);
-  Command autoCollectAndMoveSequence = autoDriveStraightCollect
-                                        .alongWith(autoReefCollect)
-                                          .andThen(autoDriveSideways);
+  Command autoCollectAndLaunchSequence = autoReefCollect
+                                          .andThen(autoLaunchCommand);
+
   // Command autoCollectAndMoveSequence = autoDriveStraightCollect
-  //                                       .withDeadline(autoReefCollect)
-  //                                         .andThen(autoDriveSideways); // TODO see if this command works for sequence
+  //                                       .alongWith(autoReefCollect)
+  //                                         .andThen(autoDriveSidewaysToLaunch);
+
+  Command autoCollectAndMoveSequence = autoDriveStraightCollect
+                                        .withDeadline(autoReefCollect)
+                                          .andThen(autoDriveSidewaysToLaunch); // TODO see if this command works for sequence
+
+  Command autoCollectAndMoveAndLaunchSequence = autoDriveStraightCollect
+                                                  .alongWith(autoReefCollect)
+                                                    .andThen(autoDriveSidewaysToLaunch
+                                                      .andThen(autoLaunchCommand));
 
 
   public RobotContainer()
@@ -215,7 +221,7 @@ public class RobotContainer
 
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
                               .alongWith(intakeCollect)
-                              .until(() -> IntakeSubsystem.algaeCollected()));
+                                .until(() -> IntakeSubsystem.algaeCollected()));
 
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
     operatorXbox.rightTrigger().whileTrue(launchGamepiece

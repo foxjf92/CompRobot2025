@@ -33,7 +33,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorLeftConfig
       .smartCurrentLimit(40)
       .idleMode(IdleMode.kBrake)
-      .closedLoopRampRate(rampRate); // TODO Confirm this slows initial ramp up?
+      .closedLoopRampRate(rampRate); // TODO Confirm this slows initial ramp up? Make much longer?
 
     elevatorRightConfig = new SparkMaxConfig();
     elevatorRightConfig
@@ -61,7 +61,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean checkGroundPosition(){
-    if(currentPosition > -10.0)
+    if(currentPosition > -10.0) // TODO finetune this value a bit
       return true;
     else
       return false;

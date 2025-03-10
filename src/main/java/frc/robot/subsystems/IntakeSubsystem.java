@@ -13,7 +13,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -22,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private SparkMax backIntakeRoller;
   private SparkMaxConfig intakeMotorConfig;
 
-  private double backRollerMultiplier = 3.0;
+  // private double backRollerMultiplier = 3.0; //Removed since ratio difference was eliminated mechanically
   private SparkAnalogSensor algaeSensor;
   public static boolean algaeCollectedStatus;
   
