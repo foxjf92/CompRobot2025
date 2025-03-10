@@ -67,11 +67,11 @@ public class RobotContainer
 
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
-  Command intakeCollect = new IntakeCommand(intake, -0.9);
+  Command intakeCollect = new IntakeCommand(intake, -0.7);
   Command intakeEject = new IntakeCommand(intake, 0.5);
   Command intakePulse = new IntakeCommand(intake, -0.1);
   Command intakeFeed = new IntakeCommand(intake, -0.9);
-  Command intakeAutoCollect = new IntakeCommand(intake, -0.9);
+  Command intakeAutoCollect = new IntakeCommand(intake, -0.7);
   Command intakeAutoStill = new IntakeCommand(intake, 0);
   Command intakeAutoFeed = new IntakeCommand(intake, -0.3);
 
@@ -112,7 +112,7 @@ public class RobotContainer
   Command launchDelay = new WaitCommand(1.0);
   Command launchGamepiece = new LauncherCommand(launcher, -0.45);
   Command launchStill = new LauncherCommand(launcher, 0);
-  Command autoLaunchDelay = new WaitCommand(1.0);
+  Command autoLaunchDelay = new WaitCommand(2.0);
   Command autoLaunchGamepiece = new LauncherCommand(launcher, -0.45);
   Command autoLaunchStill = new LauncherCommand(launcher, 0);
 
@@ -139,8 +139,8 @@ public class RobotContainer
   private double autoDriveStraightY = 0.0;  
   private double autoRotation = 0.0;
 
-  private double autoDriveSidewaysX = 0.4;
-  private double autoDriveSidewaysY = 0.8; 
+  private double autoDriveSidewaysX = 0.2;
+  private double autoDriveSidewaysY = 0.4; 
 
   Command autoDriveStraight = new AbsoluteFieldDrive(drivebase,
                                               () -> -autoDriveStraightX,
@@ -176,21 +176,21 @@ public class RobotContainer
                                             .withTimeout(3.0);
                                 
   // Auto Sequences
-  Command autoCollectAndLaunchSequence = autoReefCollect
-                                          .andThen(autoLaunchCommand);
+  // Command autoCollectAndLaunchSequence = autoReefCollect
+  //                                         .andThen(autoLaunchCommand);
 
   // Command autoCollectAndMoveSequence = autoDriveStraightCollect
   //                                       .alongWith(autoReefCollect)
   //                                         .andThen(autoDriveSidewaysToLaunch);
 
-  Command autoCollectAndMoveSequence = autoDriveStraightCollect
-                                        .withDeadline(autoReefCollect)
-                                          .andThen(autoDriveSidewaysToLaunch); // TODO see if this command works for sequence
+  // Command autoCollectAndMoveSequence = autoDriveStraightCollect
+  //                                       .withDeadline(autoReefCollect)
+  //                                         .andThen(autoDriveSidewaysToLaunch); // TODO see if this command works for sequence
 
-  Command autoCollectAndMoveAndLaunchSequence = autoDriveStraightCollect
-                                                  .alongWith(autoReefCollect)
-                                                    .andThen(autoDriveSidewaysToLaunch
-                                                      .andThen(autoLaunchCommand));
+  // Command autoCollectAndMoveAndLaunchSequence = autoDriveStraightCollect
+  //                                                 .alongWith(autoReefCollect)
+  //                                                   .andThen(autoDriveSidewaysToLaunch
+  //                                                     .andThen(autoLaunchCommand));
 
 
   public RobotContainer()
@@ -244,13 +244,12 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // return null;
-    // return driveToReefAuto;
-    // return autoDriveSideways;
+    // return autoDriveStraight;
+    // return autoDriveSidewaysToLaunch;
     // return autoReefCollect;
     // return autoLaunchCommand;
-    // return autoDriveStraight.raceWith(autoReefCollect);
-    // return autoCollectAndLaunchSequence;
-    return autoCollectAndMoveSequence;
+    return autoReefCollect.andThen(autoLaunchCommand);
+    // return autoCollectAndMoveSequence;
   }
 
   public void setMotorBrake(boolean brake)
