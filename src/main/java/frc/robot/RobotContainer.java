@@ -244,8 +244,9 @@ public class RobotContainer
     // return autoLaunchCommand;
     // return autoReefCollect.andThen(autoLaunchCommand);
     // return autoCollectAndMoveSequence;
+    return new PathPlannerAuto("TestAuto");
     // return new PathPlannerAuto("1Algae");
-    return new PathPlannerAuto("2Algae");
+    // return new PathPlannerAuto("2Algae");
   }
 
   public void setMotorBrake(boolean brake)
