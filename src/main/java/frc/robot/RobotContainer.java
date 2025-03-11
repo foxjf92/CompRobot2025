@@ -167,11 +167,10 @@ public class RobotContainer
                                               () -> -autoRotation,
                                               () -> false).withTimeout(5.0);
 
-  Command autoReefCollect = wristAutoReef
+  Command autoReefCollect = wristAutoReef.withTimeout(3.0)
                               .alongWith(intakeAutoCollect).until(IntakeSubsystem::algaeCollected)
                                 .andThen(wristAutoStow
-                                  .alongWith(intakeAutoStill))
-                                  .withTimeout(3.0);
+                                  .alongWith(intakeAutoStill));
 
   Command autoLaunchCommand = autoLaunchGamepiece
                                 .alongWith(wristAutoLaunch
