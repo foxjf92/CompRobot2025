@@ -74,7 +74,7 @@ public class RobotContainer
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
   Command intakeCollect = new IntakeCommand(intake, -0.7);
-  Command intakeEject = new IntakeCommand(intake, 0.5); // TODO does this need to be slower? 
+  Command intakeEject = new IntakeCommand(intake, 0.4); // TODO does this need to be slower? 
   Command intakeFeed = new IntakeCommand(intake, -0.9);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.7);
   Command intakeAutoStill = new IntakeCommand(intake, 0);
