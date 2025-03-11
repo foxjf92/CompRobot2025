@@ -191,9 +191,9 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(5.0, 0.0, 0.0),
+              new PIDConstants(5.0, 0.0, 0.0), // TODO Tune these values
               // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0)
+              new PIDConstants(5.0, 0.0, 0.0) // TODO Tune these values
               // Rotation PID constants
           ),
           config,
@@ -282,6 +282,13 @@ public class SwerveSubsystem extends SubsystemBase
                                      );
   }
 
+  public Command scoringPose(){
+    Pose2d currentPose = swerveDrive.getPose();
+
+
+    
+    return driveToPose(new Pose2d(new Translation2d(Meter.of(1.5), Meter.of(1.5)), Rotation2d.fromDegrees(0)));
+  }
   /**
    * Drive with {@link SwerveSetpointGenerator} from 254, implemented by PathPlanner.
    *

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
@@ -27,6 +28,9 @@ import frc.robot.subsystems.LauncherSubsystem;
 import frc.robot.subsystems.WristSubsytem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import swervelib.SwerveInputStream;
 
@@ -65,11 +69,12 @@ public class RobotContainer
                                                                                              driverXbox::getRightY)
                                                            .headingWhile(true);
 
+  // PathPlanner Commands
+
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
   Command intakeCollect = new IntakeCommand(intake, -0.7);
-  Command intakeEject = new IntakeCommand(intake, 0.5);
-  Command intakePulse = new IntakeCommand(intake, -0.1);
+  Command intakeEject = new IntakeCommand(intake, 0.5); // TODO does this need to be slower? 
   Command intakeFeed = new IntakeCommand(intake, -0.9);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.7);
   Command intakeAutoStill = new IntakeCommand(intake, 0);
@@ -95,10 +100,10 @@ public class RobotContainer
   Command elevatorL2Intake = new ElevatorCommand(elevator, 3);  
   Command elevatorL3Intake = new ElevatorCommand(elevator, 4);
   Command elevatorLaunch = new ElevatorCommand(elevator, 5);
-  Command elevatorAutoReef = new ElevatorCommand(elevator, 3);
+  Command elevatorAutoReef1 = new ElevatorCommand(elevator, 3);
+  Command elevatorAutoReef2 = new ElevatorCommand(elevator, 4);
   Command elevatorAutoLaunch = new ElevatorCommand(elevator, 5);
-
-  // Command elevatorCoralTop = new ElevatorCommand(elevator, 3);
+  Command elevatorCoralTop = new ElevatorCommand(elevator, 3);
   // Command elevatorProcessor = new ElevatorCommand(elevator, 3);
   // Command elevatorClimb = new ElevatorCommand(elevator, 3);
 
@@ -121,7 +126,8 @@ public class RobotContainer
   Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
   Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
   // Command alignDrive = new AbsoluteFieldDrive(drivebase, () -> 0, () -> 0, () -> 0, () -> true);
-  
+  // Command launchPose = drivebase.driveToPose(null);
+
   Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
                                               () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
                                                                           OperatorConstants.DEADBAND),
@@ -133,6 +139,7 @@ public class RobotContainer
                                               driverXbox.getHID()::getAButtonPressed,
                                               driverXbox.getHID()::getXButtonPressed,
                                               driverXbox.getHID()::getBButtonPressed);
+
 
   // Auto Commands
   private double autoDriveStraightX = 0.5;
@@ -160,44 +167,31 @@ public class RobotContainer
                                               () -> -autoRotation,
                                               () -> false).withTimeout(5.0);
 
-  Command autoReefCollect = elevatorAutoReef
-                              .alongWith(wristAutoReef
-                              .alongWith(intakeAutoCollect)).until(IntakeSubsystem::algaeCollected)
+  Command autoReefCollect = wristAutoReef
+                              .alongWith(intakeAutoCollect).until(IntakeSubsystem::algaeCollected)
                                 .andThen(wristAutoStow
-                                          .alongWith(intakeAutoStill))
-                                .withTimeout(5.0);
+                                  .alongWith(intakeAutoStill))
+                                  .withTimeout(3.0);
 
   Command autoLaunchCommand = autoLaunchGamepiece
-                                .alongWith(elevatorAutoLaunch
                                 .alongWith(wristAutoLaunch
                                 .alongWith(autoLaunchDelay
                                   .andThen(intakeAutoFeed
-                                            .alongWith(feederAutoLaunch)))))
-                                            .withTimeout(3.0);
-                                
-  // Auto Sequences
-  // Command autoCollectAndLaunchSequence = autoReefCollect
-  //                                         .andThen(autoLaunchCommand);
-
-  // Command autoCollectAndMoveSequence = autoDriveStraightCollect
-  //                                       .alongWith(autoReefCollect)
-  //                                         .andThen(autoDriveSidewaysToLaunch);
-
-  // Command autoCollectAndMoveSequence = autoDriveStraightCollect
-  //                                       .withDeadline(autoReefCollect)
-  //                                         .andThen(autoDriveSidewaysToLaunch); // TODO see if this command works for sequence
-
-  // Command autoCollectAndMoveAndLaunchSequence = autoDriveStraightCollect
-  //                                                 .alongWith(autoReefCollect)
-  //                                                   .andThen(autoDriveSidewaysToLaunch
-  //                                                     .andThen(autoLaunchCommand));
-
+                                    .alongWith(feederAutoLaunch))))
+                                    .withTimeout(3.0);
 
   public RobotContainer()
   {
     // Configure the trigger bindings
     configureBindings();
-    DriverStation.silenceJoystickConnectionWarning(true);
+
+    // PathPlanner Commands
+    NamedCommands.registerCommand("autoReefCollect", autoReefCollect);
+    NamedCommands.registerCommand("elevatorAutoReef1", elevatorAutoReef1);
+    NamedCommands.registerCommand("elevatorAutoReef2", elevatorAutoReef2);
+    NamedCommands.registerCommand("elevatorAutoLaunch", elevatorAutoLaunch);
+    NamedCommands.registerCommand("autoLaunchCommand", autoLaunchCommand);
+
     drivebase.setDefaultCommand(driveWithHeadingSnaps);
     // drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
     // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
@@ -212,7 +206,7 @@ public class RobotContainer
   {
     // Driver Bindings
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
-    // driverXbox.rightBumper().whileTrue(alignDrive);
+    driverXbox.rightBumper().whileTrue(new RunCommand(drivebase:: scoringPose, drivebase));
 
     // Oerator Bindings
     // operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
@@ -248,8 +242,10 @@ public class RobotContainer
     // return autoDriveSidewaysToLaunch;
     // return autoReefCollect;
     // return autoLaunchCommand;
-    return autoReefCollect.andThen(autoLaunchCommand);
+    // return autoReefCollect.andThen(autoLaunchCommand);
     // return autoCollectAndMoveSequence;
+    // return new PathPlannerAuto("1Algae");
+    return new PathPlannerAuto("2Algae");
   }
 
   public void setMotorBrake(boolean brake)
