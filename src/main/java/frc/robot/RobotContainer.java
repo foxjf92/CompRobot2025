@@ -212,14 +212,9 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // return null;
-    // return autoDriveStraight;
-    // return autoDriveSidewaysToLaunch;
-    // return autoReefCollect;
-    // return autoLaunchCommand;
-    // return autoReefCollect.andThen(autoLaunchCommand);
-    // return autoCollectAndMoveSequence;
-    return new PathPlannerAuto("TestAuto");
+      return new PathPlannerAuto("TestAuto");
     // return new PathPlannerAuto("1Algae");
+    // return new PathPlannerAuto("1AlgaePick2");
     // return new PathPlannerAuto("2Algae");
   }
 
