@@ -74,7 +74,7 @@ public class RobotContainer
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
   Command intakeCollect = new IntakeCommand(intake, -0.7);
-  Command intakeEject = new IntakeCommand(intake, 0.4); // TODO does this need to be slower? 
+  Command intakeEject = new IntakeCommand(intake, 0.4); // 0.4 seems to be good
   Command intakeFeed = new IntakeCommand(intake, -0.9);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.7);
   Command intakeAutoStill = new IntakeCommand(intake, 0);
@@ -114,14 +114,13 @@ public class RobotContainer
   Command feederAutoStill = new FeederCommand(feeder, 0);
   
   // Launcher commands
-  Command launchDelay = new WaitCommand(1.0);
+  Command launchDelay = new WaitCommand(.75); // Changed from 1.0, maybe even try 0.5
   Command launchGamepiece = new LauncherCommand(launcher, -0.45);
   Command launchStill = new LauncherCommand(launcher, 0);
   Command autoLaunchDelay = new WaitCommand(2.0);
   Command autoLaunchGamepiece = new LauncherCommand(launcher, -0.45);
   Command autoLaunchStill = new LauncherCommand(launcher, 0);
 
-  
   //Swerve Commands
   Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
   Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
@@ -140,44 +139,24 @@ public class RobotContainer
                                               driverXbox.getHID()::getXButtonPressed,
                                               driverXbox.getHID()::getBButtonPressed);
 
-
   // Auto Commands
   private double autoDriveStraightX = 0.5;
   private double autoDriveStraightY = 0.0;  
   private double autoRotation = 0.0;
 
   private double autoDriveSidewaysX = 0.2;
-  private double autoDriveSidewaysY = 0.4; 
+  private double autoDriveSidewaysY = 0.4;
 
-  Command autoDriveStraight = new AbsoluteFieldDrive(drivebase,
-                                              () -> -autoDriveStraightX,
-                                              () -> -autoDriveStraightY,
-                                              () -> -autoRotation,
-                                              () -> false).withTimeout(7.0);
-
-  Command autoDriveStraightCollect = new AbsoluteFieldDrive(drivebase,
-                                              () -> -autoDriveStraightX,
-                                              () -> -autoDriveStraightY,
-                                              () -> -autoRotation,
-                                              () -> false).withTimeout(7.0);
-
-  Command autoDriveSidewaysToLaunch = new AbsoluteFieldDrive(drivebase,
-                                              () -> autoDriveSidewaysX,
-                                              () -> autoDriveSidewaysY,
-                                              () -> -autoRotation,
-                                              () -> false).withTimeout(5.0);
-
-  Command autoReefCollect = wristAutoReef.withTimeout(3.0)
-                              .alongWith(intakeAutoCollect).until(IntakeSubsystem::algaeCollected)
+  Command autoReefCollect = wristAutoReef
+                              .alongWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected))
                                 .andThen(wristAutoStow
-                                  .alongWith(intakeAutoStill));
+                                  .alongWith(intakeAutoStill)).withTimeout(3.0);
 
   Command autoLaunchCommand = autoLaunchGamepiece
                                 .alongWith(wristAutoLaunch
-                                .alongWith(autoLaunchDelay
-                                  .andThen(intakeAutoFeed
-                                    .alongWith(feederAutoLaunch))))
-                                    .withTimeout(3.0);
+                                  .alongWith(autoLaunchDelay
+                                    .andThen(intakeAutoFeed
+                                      .alongWith(feederAutoLaunch)))).withTimeout(3.0);
 
   public RobotContainer()
   {
@@ -208,10 +187,6 @@ public class RobotContainer
     driverXbox.rightBumper().whileTrue(new RunCommand(drivebase:: scoringPose, drivebase));
 
     // Oerator Bindings
-    // operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
-    //                           .alongWith(intakeCollect)
-    //                           .until(() -> IntakeSubsystem.algaeCollected()));
-
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
                               .alongWith(intakeCollect)
                                 .until(() -> IntakeSubsystem.algaeCollected()));

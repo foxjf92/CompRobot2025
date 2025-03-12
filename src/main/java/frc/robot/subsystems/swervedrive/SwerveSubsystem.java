@@ -284,10 +284,9 @@ public class SwerveSubsystem extends SubsystemBase
 
   public Command scoringPose(){
     Pose2d currentPose = swerveDrive.getPose();
-
-
+    Pose2d scorePose = new Pose2d(7.0, currentPose.getY(), new Rotation2d(0));
     
-    return driveToPose(new Pose2d(new Translation2d(Meter.of(1.5), Meter.of(1.5)), Rotation2d.fromDegrees(0)));
+    return driveToPose(scorePose);
   }
   /**
    * Drive with {@link SwerveSetpointGenerator} from 254, implemented by PathPlanner.
