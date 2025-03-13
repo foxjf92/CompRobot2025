@@ -64,8 +64,8 @@ public final class Constants {
 
   public static class ElevatorConstants {
     public static final double elevatorGroundIntakePosition = -0.5;
-    public static final double elevatorL2IntakePosition = -28.5;
-    public static final double eleavtorL3IntakePosition = -54.0;
+    public static final double elevatorL2IntakePosition = -26.5;
+    public static final double eleavtorL3IntakePosition = -52.0;
     public static final double elevatorLaunchPosition = -40.0;
     public static final double elevatorLaunchClearance = -35.0;
     public static final double elevatorCoralTopIntakePosition = 0.0;

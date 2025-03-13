@@ -35,10 +35,10 @@ public class ElevatorSubsystem extends SubsystemBase {
       .idleMode(IdleMode.kBrake)
       .closedLoopRampRate(rampRate)
       .softLimit
-        .forwardSoftLimit(60)
+        .forwardSoftLimit(55)
         .forwardSoftLimitEnabled(true)
         .reverseSoftLimit(0)
-        .reverseSoftLimitEnabled(true); // TODO Confirm this slows initial ramp up? Make much longer?
+        .reverseSoftLimitEnabled(true);
 
     elevatorRightConfig = new SparkMaxConfig();
     elevatorRightConfig
@@ -47,8 +47,8 @@ public class ElevatorSubsystem extends SubsystemBase {
       .closedLoopRampRate(rampRate) 
       .softLimit
         .forwardSoftLimit(0.0)
-        .forwardSoftLimitEnabled(true) // TODO update to true after setting soft limits
-        .reverseSoftLimit(-60.0)
+        .forwardSoftLimitEnabled(true)
+        .reverseSoftLimit(-55.0)
         .reverseSoftLimitEnabled(true);
       
     elevatorLeft = new SparkMax(10, MotorType.kBrushless);

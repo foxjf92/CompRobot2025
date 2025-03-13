@@ -5,12 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
@@ -20,7 +18,6 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LauncherCommand;
 import frc.robot.commands.MoveWristCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
-import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -114,7 +111,7 @@ public class RobotContainer
   Command feederAutoStill = new FeederCommand(feeder, 0);
   
   // Launcher commands
-  Command launchDelay = new WaitCommand(.75); // Changed from 1.0, maybe even try 0.5
+  Command launchDelay = new WaitCommand(.5); // .75 was more than enough, trying .5
   Command launchGamepiece = new LauncherCommand(launcher, -0.45);
   Command launchStill = new LauncherCommand(launcher, 0);
   Command autoLaunchDelay = new WaitCommand(2.0);
@@ -124,7 +121,6 @@ public class RobotContainer
   //Swerve Commands
   Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
   Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
-  // Command alignDrive = new AbsoluteFieldDrive(drivebase, () -> 0, () -> 0, () -> 0, () -> true);
   // Command launchPose = drivebase.driveToPose(null);
 
   Command driveWithHeadingSnaps = new AbsoluteDriveAdv(drivebase,
@@ -140,17 +136,9 @@ public class RobotContainer
                                               driverXbox.getHID()::getBButtonPressed);
 
   // Auto Commands
-  private double autoDriveStraightX = 0.5;
-  private double autoDriveStraightY = 0.0;  
-  private double autoRotation = 0.0;
-
-  private double autoDriveSidewaysX = 0.2;
-  private double autoDriveSidewaysY = 0.4;
-
   Command autoReefCollect = wristAutoReef
                               .alongWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected))
-                                .andThen(wristAutoStow
-                                  .alongWith(intakeAutoStill)).withTimeout(3.0);
+                                .andThen(intakeAutoStill).withTimeout(3.0);
 
   Command autoLaunchCommand = autoLaunchGamepiece
                                 .alongWith(wristAutoLaunch
@@ -171,8 +159,6 @@ public class RobotContainer
     NamedCommands.registerCommand("autoLaunchCommand", autoLaunchCommand);
 
     drivebase.setDefaultCommand(driveWithHeadingSnaps);
-    // drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     intake.setDefaultCommand(intakeStill);
     wrist.setDefaultCommand(wristStow);
     feeder.setDefaultCommand(feederStill);
@@ -184,7 +170,7 @@ public class RobotContainer
   {
     // Driver Bindings
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
-    driverXbox.rightBumper().whileTrue(new RunCommand(drivebase:: scoringPose, drivebase));
+    // driverXbox.rightBumper().whileTrue(new RunCommand(drivebase::scoringPose)); // TODO figure out how to do this?
 
     // Oerator Bindings
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
@@ -212,9 +198,9 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // return null;
-      return new PathPlannerAuto("TestAuto");
+    // return new PathPlannerAuto("TestAuto");
     // return new PathPlannerAuto("1Algae");
-    // return new PathPlannerAuto("1AlgaePick2");
+    return new PathPlannerAuto("1AlgaePick2");
     // return new PathPlannerAuto("2Algae");
   }
 
