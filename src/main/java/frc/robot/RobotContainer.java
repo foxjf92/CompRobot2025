@@ -114,7 +114,7 @@ public class RobotContainer
   Command launchDelay = new WaitCommand(.5); // .75 was more than enough, trying .5
   Command launchGamepiece = new LauncherCommand(launcher, -0.45);
   Command launchStill = new LauncherCommand(launcher, 0);
-  Command autoLaunchDelay = new WaitCommand(2.0);
+  Command autoLaunchDelay = new WaitCommand(0.5);
   Command autoLaunchGamepiece = new LauncherCommand(launcher, -0.45);
   Command autoLaunchStill = new LauncherCommand(launcher, 0);
 
@@ -200,8 +200,8 @@ public class RobotContainer
     // return null;
     // return new PathPlannerAuto("TestAuto");
     // return new PathPlannerAuto("1Algae");
-    return new PathPlannerAuto("1AlgaePick2");
-    // return new PathPlannerAuto("2Algae");
+    // return new PathPlannerAuto("1AlgaePick2");
+    return new PathPlannerAuto("2Algae");
   }
 
   public void setMotorBrake(boolean brake)
