@@ -174,8 +174,9 @@ public class RobotContainer
 
     // Oerator Bindings
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
-                              .alongWith(intakeCollect)
-                                .until(() -> IntakeSubsystem.algaeCollected()));
+                                .alongWith(intakeCollect)
+                                  .until(() -> IntakeSubsystem.algaeCollected()))
+                              .onFalse(wristHold);
 
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
     operatorXbox.rightTrigger().whileTrue(launchGamepiece

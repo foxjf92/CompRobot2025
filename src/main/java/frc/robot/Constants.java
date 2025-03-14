@@ -52,7 +52,7 @@ public final class Constants {
   // public static class OperatorConstants {}
 
   public static class WristConstants {
-    public static final double wristStowPosition = 0.5;
+    public static final double wristStowPosition = 0.0;
     public static final double wristGroundIntakePosition = 32.0;
     public static final double wristHoldPosition = 0.5;
     public static final double wristReefIntakePosition = 15.0;
