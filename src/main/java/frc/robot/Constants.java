@@ -52,7 +52,7 @@ public final class Constants {
   // public static class OperatorConstants {}
 
   public static class WristConstants {
-    public static final double wristStowPosition = 1.0;
+    public static final double wristStowPosition = 0.5;
     public static final double wristGroundIntakePosition = 32.0;
     public static final double wristHoldPosition = 0.5;
     public static final double wristReefIntakePosition = 15.0;
@@ -64,7 +64,7 @@ public final class Constants {
 
   public static class ElevatorConstants {
     public static final double elevatorGroundIntakePosition = -0.5;
-    public static final double elevatorL2IntakePosition = -26.5;
+    public static final double elevatorL2IntakePosition = -26.0;
     public static final double eleavtorL3IntakePosition = -52.0;
     public static final double elevatorLaunchPosition = -40.0;
     public static final double elevatorLaunchClearance = -35.0;
