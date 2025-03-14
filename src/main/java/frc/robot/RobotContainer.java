@@ -100,7 +100,7 @@ public class RobotContainer
   Command elevatorAutoReef1 = new ElevatorCommand(elevator, 3);
   Command elevatorAutoReef2 = new ElevatorCommand(elevator, 4);
   Command elevatorAutoLaunch = new ElevatorCommand(elevator, 5);
-  Command elevatorCoralTop = new ElevatorCommand(elevator, 3);
+  Command elevatorAutoCoral = new ElevatorCommand(elevator, 2);
   // Command elevatorProcessor = new ElevatorCommand(elevator, 3);
   // Command elevatorClimb = new ElevatorCommand(elevator, 3);
 
@@ -114,7 +114,7 @@ public class RobotContainer
   Command launchDelay = new WaitCommand(.5); // .75 was more than enough, trying .5
   Command launchGamepiece = new LauncherCommand(launcher, -0.45);
   Command launchStill = new LauncherCommand(launcher, 0);
-  Command autoLaunchDelay = new WaitCommand(0.5);
+  Command autoLaunchDelay = new WaitCommand(2.0);
   Command autoLaunchGamepiece = new LauncherCommand(launcher, -0.45);
   Command autoLaunchStill = new LauncherCommand(launcher, 0);
 
@@ -141,10 +141,10 @@ public class RobotContainer
                                 .andThen(intakeAutoStill).withTimeout(3.0));
 
   Command autoLaunchCommand = autoLaunchGamepiece
-                                .raceWith(wristAutoLaunch
-                                  .raceWith(autoLaunchDelay
+                                .raceWith(wristAutoLaunch.withTimeout(4.0)
+                                  .alongWith(autoLaunchDelay
                                     .andThen(intakeAutoFeed
-                                      .raceWith(feederAutoLaunch)))).withTimeout(3.0);
+                                      .andThen(feederAutoLaunch))).withTimeout(3.0));
 
   public RobotContainer()
   {
@@ -157,12 +157,14 @@ public class RobotContainer
     NamedCommands.registerCommand("elevatorAutoReef2", elevatorAutoReef2);
     NamedCommands.registerCommand("elevatorAutoLaunch", elevatorAutoLaunch);
     NamedCommands.registerCommand("autoLaunchCommand", autoLaunchCommand);
+    NamedCommands.registerCommand("elevatorAutoCoral", elevatorAutoCoral);
 
     drivebase.setDefaultCommand(driveWithHeadingSnaps);
     intake.setDefaultCommand(intakeStill);
     wrist.setDefaultCommand(wristStow);
     feeder.setDefaultCommand(feederStill);
     launcher.setDefaultCommand(launchStill);
+    // elevator.setDefaultCommand(elevatorAutoCoral);
   }
 
   

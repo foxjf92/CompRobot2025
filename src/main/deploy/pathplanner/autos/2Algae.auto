@@ -5,9 +5,35 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "StartToReef1"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "elevatorAutoCoral"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.0
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "StartToReef1"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {

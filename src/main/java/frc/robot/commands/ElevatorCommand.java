@@ -33,9 +33,9 @@ public class ElevatorCommand extends Command {
         if (targetPosition == 1) {
             elevatorSetpoint = ElevatorConstants.elevatorGroundIntakePosition; // Set in Constants
         }
-        // if (targetPosition == 2) {
-        //     elevatorSetpoint = ElevatorConstants.elevatorCoralTopIntakePosition; // Set in Constants
-        // }
+        if (targetPosition == 2) {
+            elevatorSetpoint = ElevatorConstants.elevatorAutoCoral; // Set in Constants
+        }
         if (targetPosition == 3) {
             elevatorSetpoint = ElevatorConstants.elevatorL2IntakePosition; 
         }
