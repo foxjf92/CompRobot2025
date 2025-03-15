@@ -70,7 +70,7 @@ public class RobotContainer
 
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
-  Command intakeCollect = new IntakeCommand(intake, -0.7);
+  Command intakeCollect = new IntakeCommand(intake, -0.8);
   Command intakeEject = new IntakeCommand(intake, 0.4); // 0.4 seems to be good
   Command intakeFeed = new IntakeCommand(intake, -0.9);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.7);
@@ -114,7 +114,7 @@ public class RobotContainer
   Command launchDelay = new WaitCommand(.5); // .75 was more than enough, trying .5
   Command launchGamepiece = new LauncherCommand(launcher, -0.45);
   Command launchStill = new LauncherCommand(launcher, 0);
-  Command autoLaunchDelay = new WaitCommand(2.0);
+  Command autoLaunchDelay = new WaitCommand(1.0); // changed 2.0 to 1.0
   Command autoLaunchGamepiece = new LauncherCommand(launcher, -0.45);
   Command autoLaunchStill = new LauncherCommand(launcher, 0);
 
@@ -141,10 +141,15 @@ public class RobotContainer
                                 .andThen(intakeAutoStill).withTimeout(3.0));
 
   Command autoLaunchCommand = autoLaunchGamepiece
-                                .raceWith(wristAutoLaunch.withTimeout(4.0)
-                                  .alongWith(autoLaunchDelay
+                                .raceWith(wristAutoLaunch
+                                  .raceWith(autoLaunchDelay
                                     .andThen(intakeAutoFeed
-                                      .andThen(feederAutoLaunch))).withTimeout(3.0));
+                                      .andThen(feederAutoLaunch))).withTimeout(2.0));
+  // Command autoLaunchCommand = autoLaunchGamepiece
+  //                               .raceWith(wristAutoLaunch.withTimeout(4.0)
+  //                                 .alongWith(autoLaunchDelay
+  //                                   .andThen(intakeAutoFeed
+  //                                     .andThen(feederAutoLaunch))).withTimeout(3.0));
 
   public RobotContainer()
   {
