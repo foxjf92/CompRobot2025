@@ -70,7 +70,7 @@ public class RobotContainer
 
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
-  Command intakeCollect = new IntakeCommand(intake, -0.7);
+  Command intakeCollect = new IntakeCommand(intake, -0.8);
   Command intakeEject = new IntakeCommand(intake, 0.4); // 0.4 seems to be good
   Command intakeFeed = new IntakeCommand(intake, -0.9);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.7);
@@ -114,7 +114,7 @@ public class RobotContainer
   Command launchDelay = new WaitCommand(.5); // .75 was more than enough, trying .5
   Command launchGamepiece = new LauncherCommand(launcher, -0.45);
   Command launchStill = new LauncherCommand(launcher, 0);
-  Command autoLaunchDelay = new WaitCommand(2.0);
+  Command autoLaunchDelay = new WaitCommand(2.0); // see if this can go down, .5 didn't work at first
   Command autoLaunchGamepiece = new LauncherCommand(launcher, -0.45);
   Command autoLaunchStill = new LauncherCommand(launcher, 0);
 
@@ -138,13 +138,19 @@ public class RobotContainer
   // Auto Commands
   Command autoReefCollect = wristAutoReef
                               .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected)
-                                .andThen(intakeAutoStill).withTimeout(3.0));
+                                .andThen(intakeAutoStill.alongWith(wristAutoStow)).withTimeout(3.0)); // Timeout needs to come down if possible
 
   Command autoLaunchCommand = autoLaunchGamepiece
-                                .raceWith(wristAutoLaunch.withTimeout(4.0)
-                                  .alongWith(autoLaunchDelay
-                                    .andThen(intakeAutoFeed
-                                      .andThen(feederAutoLaunch))).withTimeout(3.0));
+                                .raceWith(wristAutoLaunch
+                                  .raceWith(autoLaunchDelay
+                                    .alongWith(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(3.0)); // Timeout needs to come down if possible
+  
+  // Below logic was flawed from intention but did seem to work
+  // Command autoLaunchCommand = autoLaunchGamepiece
+  //                               .raceWith(wristAutoLaunch.withTimeout(4.0)
+  //                                 .alongWith(autoLaunchDelay
+  //                                   .andThen(intakeAutoFeed
+  //                                     .andThen(feederAutoLaunch))).withTimeout(3.0));
 
   public RobotContainer()
   {
@@ -184,8 +190,8 @@ public class RobotContainer
     operatorXbox.rightTrigger().whileTrue(launchGamepiece
                                 .alongWith(wristLaunch
                                 .alongWith(launchDelay
-                                    .andThen(intakeFeed
-                                    .alongWith(feederLaunch)))));
+                                  .andThen(intakeFeed
+                                  .alongWith(feederLaunch)))));
 
     operatorXbox.a().onTrue(elevatorGroundIntake);
     operatorXbox.x().onTrue(elevatorL2Intake);

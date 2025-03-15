@@ -59,7 +59,7 @@ public final class Constants {
     //public static final double wristL3IntakePosition = 0.0;
     public static final double wristLaunchPosition = 5.0;
     //public static final double wristCoralTopIntakePosition = 0.0;
-    public static final double wristProcessorPosiiton = 0.0;
+    public static final double wristProcessorPosiiton = 0.0; // TODO Set this
   }
 
   public static class ElevatorConstants {
