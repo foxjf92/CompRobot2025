@@ -213,6 +213,57 @@
           "data": {
             "pathName": "Score2ToReef3"
           }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "elevatorAutoReef1"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "autoReefCollect"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef3ToScore3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "wristAutoStow"
+                }
+              }
+            ]
+          }
         }
       ]
     }

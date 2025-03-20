@@ -73,9 +73,9 @@ public class RobotContainer
   Command intakeCollect = new IntakeCommand(intake, -0.8);
   Command intakeEject = new IntakeCommand(intake, 0.4); // 0.4 seems to be good
   Command intakeFeed = new IntakeCommand(intake, -0.9);
-  Command intakeAutoCollect = new IntakeCommand(intake, -0.7);
+  Command intakeAutoCollect = new IntakeCommand(intake, -0.8);
   Command intakeAutoStill = new IntakeCommand(intake, 0);
-  Command intakeAutoFeed = new IntakeCommand(intake, -0.3);
+  Command intakeAutoFeed = new IntakeCommand(intake, -0.9); // changed from .3 to .9 to match feeder roller speed
 
 
   // Wrist position commands
@@ -111,10 +111,10 @@ public class RobotContainer
   Command feederAutoStill = new FeederCommand(feeder, 0);
   
   // Launcher commands
-  Command launchDelay = new WaitCommand(.5); // .75 was more than enough, trying .5
+  Command launchDelay = new WaitCommand(0.5); // .75 was more than enough, trying .5
   Command launchGamepiece = new LauncherCommand(launcher, -0.45);
   Command launchStill = new LauncherCommand(launcher, 0);
-  Command autoLaunchDelay = new WaitCommand(1.0); // changed 2.0 to 1.0
+  Command autoLaunchDelay = new WaitCommand(0.5); // changed from 1.0 to match teleop delay
   Command autoLaunchGamepiece = new LauncherCommand(launcher, -0.45);
   Command autoLaunchStill = new LauncherCommand(launcher, 0);
 
@@ -136,15 +136,14 @@ public class RobotContainer
                                               driverXbox.getHID()::getBButtonPressed);
 
   // Auto Commands
+  // Command autoReefCollect = wristAutoReef
+  //                             .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill).withTimeout(3.0)); // previous command, trying to reduce cycle time
   Command autoReefCollect = wristAutoReef
-                              .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected)
-                                .andThen(intakeAutoStill).withTimeout(3.0));
+                              .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill)).withTimeout(1.0); // reduce to 1 second?
 
   Command autoLaunchCommand = autoLaunchGamepiece
                                 .raceWith(wristAutoLaunch
-                                  .raceWith(autoLaunchDelay
-                                    .andThen(intakeAutoFeed
-                                      .andThen(feederAutoLaunch))).withTimeout(2.0));
+                                  .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.andThen(feederAutoLaunch))).withTimeout(2.0)); // change to 1.0?
   // Command autoLaunchCommand = autoLaunchGamepiece
   //                               .raceWith(wristAutoLaunch.withTimeout(4.0)
   //                                 .alongWith(autoLaunchDelay
@@ -163,6 +162,8 @@ public class RobotContainer
     NamedCommands.registerCommand("elevatorAutoLaunch", elevatorAutoLaunch);
     NamedCommands.registerCommand("autoLaunchCommand", autoLaunchCommand);
     NamedCommands.registerCommand("elevatorAutoCoral", elevatorAutoCoral);
+    NamedCommands.registerCommand("wristAutoStow", wristAutoStow);
+
 
     drivebase.setDefaultCommand(driveWithHeadingSnaps);
     intake.setDefaultCommand(intakeStill);
@@ -177,7 +178,7 @@ public class RobotContainer
   {
     // Driver Bindings
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
-    // driverXbox.rightBumper().whileTrue(new RunCommand(drivebase::scoringPose)); // TODO figure out how to do this?
+    // driverXbox.rightBumper().whileTrue(new RunCommand(drivebase::scoringPose));
 
     // Oerator Bindings
     operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
@@ -210,6 +211,8 @@ public class RobotContainer
     // return new PathPlannerAuto("1Algae");
     // return new PathPlannerAuto("1AlgaePick2");
     return new PathPlannerAuto("2Algae");
+    // return new PathPlannerAuto("3Algae");
+
   }
 
   public void setMotorBrake(boolean brake)

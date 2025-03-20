@@ -31,7 +31,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     elevatorLeftConfig = new SparkMaxConfig();
     elevatorLeftConfig
-      .smartCurrentLimit(40)
+      .smartCurrentLimit(40) // TODO inccrease this to see if elevator speed can be improved 
       .idleMode(IdleMode.kBrake)
       .closedLoopRampRate(rampRate)
       .softLimit
@@ -42,7 +42,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     elevatorRightConfig = new SparkMaxConfig();
     elevatorRightConfig
-      .smartCurrentLimit(40) 
+      .smartCurrentLimit(40) // TODO increase this to match above
       .idleMode(IdleMode.kBrake)
       .closedLoopRampRate(rampRate) 
       .softLimit
