@@ -70,7 +70,7 @@ public class RobotContainer
 
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
-  Command intakeCollect = new IntakeCommand(intake, -0.8);
+  Command intakeCollect = new IntakeCommand(intake, -0.7);
   Command intakeEject = new IntakeCommand(intake, 0.4); // 0.4 seems to be good
   Command intakeFeed = new IntakeCommand(intake, -0.9);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.8);
@@ -143,7 +143,7 @@ public class RobotContainer
 
   Command autoLaunchCommand = autoLaunchGamepiece
                                 .raceWith(wristAutoLaunch
-                                  .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.andThen(feederAutoLaunch))).withTimeout(2.0)); // change to 1.0?
+                                  .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.andThen(feederAutoLaunch))).withTimeout(1.0)); // change to 1.0?
   // Command autoLaunchCommand = autoLaunchGamepiece
   //                               .raceWith(wristAutoLaunch.withTimeout(4.0)
   //                                 .alongWith(autoLaunchDelay
@@ -210,8 +210,8 @@ public class RobotContainer
     // return new PathPlannerAuto("TestAuto");
     // return new PathPlannerAuto("1Algae");
     // return new PathPlannerAuto("1AlgaePick2");
-    return new PathPlannerAuto("2Algae");
-    // return new PathPlannerAuto("3Algae");
+    // return new PathPlannerAuto("2Algae");
+    return new PathPlannerAuto("3Algae");
 
   }
 
