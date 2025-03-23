@@ -178,7 +178,6 @@ public class RobotContainer
     wrist.setDefaultCommand(wristStow);
     feeder.setDefaultCommand(feederStill);
     launcher.setDefaultCommand(launchStill);
-    // elevator.setDefaultCommand(elevatorAutoCoral);
   }
 
   
