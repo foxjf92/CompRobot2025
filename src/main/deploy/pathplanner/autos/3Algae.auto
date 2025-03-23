@@ -120,9 +120,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Score1ToReef2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score1ToReef2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "autoLaunchStill"
+                }
+              }
+            ]
           }
         },
         {
@@ -142,7 +155,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.0
                       }
                     },
                     {
@@ -193,7 +206,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.0
                       }
                     },
                     {
@@ -209,9 +222,41 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Score2ToReef3"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score2ToReef3"
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "elevatorAutoReef1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "wristAutoStow"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": []
           }
         },
         {
@@ -221,7 +266,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "elevatorAutoReef1"
+                  "name": "autoReefCollect"
                 }
               },
               {
@@ -295,6 +340,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": []
           }
         }
       ]

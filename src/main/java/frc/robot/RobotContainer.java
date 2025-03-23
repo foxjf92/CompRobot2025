@@ -70,7 +70,9 @@ public class RobotContainer
 
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
+  Command intakeLollipopStill = new IntakeCommand(intake, 0);
   Command intakeCollect = new IntakeCommand(intake, -0.7);
+  Command intakeLollipop = new IntakeCommand(intake, -0.7);
   Command intakeEject = new IntakeCommand(intake, 0.4); // 0.4 seems to be good
   Command intakeFeed = new IntakeCommand(intake, -0.9);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.8);
@@ -82,8 +84,10 @@ public class RobotContainer
   Command wristStow = new MoveWristCommand(wrist, 0);
   Command wristGroundIntake = new MoveWristCommand(wrist, 1);
   Command wristHold = new MoveWristCommand(wrist, 2);  
+  Command wristLollipopHold = new MoveWristCommand(wrist, 2);  
   Command wristProcessor = new MoveWristCommand(wrist, 3);
   Command wristReefIntake = new MoveWristCommand(wrist, 4);
+  Command wristLollipopIntake = new MoveWristCommand(wrist, 4);
   Command wristLaunch = new MoveWristCommand(wrist, 6);
   Command wristAutoReef = new MoveWristCommand(wrist, 4);
   Command wristAutoStow = new MoveWristCommand(wrist, 0);
@@ -97,6 +101,7 @@ public class RobotContainer
   Command elevatorL2Intake = new ElevatorCommand(elevator, 3);  
   Command elevatorL3Intake = new ElevatorCommand(elevator, 4);
   Command elevatorLaunch = new ElevatorCommand(elevator, 5);
+  Command elevatorAutoGround = new ElevatorCommand(elevator, 1);
   Command elevatorAutoReef1 = new ElevatorCommand(elevator, 3);
   Command elevatorAutoReef2 = new ElevatorCommand(elevator, 4);
   Command elevatorAutoLaunch = new ElevatorCommand(elevator, 5);
@@ -143,12 +148,13 @@ public class RobotContainer
 
   Command autoLaunchCommand = autoLaunchGamepiece
                                 .raceWith(wristAutoLaunch
-                                  .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.andThen(feederAutoLaunch))).withTimeout(1.0)); // change to 1.0?
+                                  .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(1.0)
+                                    .raceWith(autoLaunchStill).withTimeout(1.01)); // change to 1.0?
+  
   // Command autoLaunchCommand = autoLaunchGamepiece
-  //                               .raceWith(wristAutoLaunch.withTimeout(4.0)
-  //                                 .alongWith(autoLaunchDelay
-  //                                   .andThen(intakeAutoFeed
-  //                                     .andThen(feederAutoLaunch))).withTimeout(3.0));
+  //                               .raceWith(wristAutoLaunch
+  //                                 .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(1.0)
+  //                                   .raceWith(autoLaunchStill).withTimeout(1.01)); // change to 1.0?
 
   public RobotContainer()
   {
@@ -157,10 +163,12 @@ public class RobotContainer
 
     // PathPlanner Commands
     NamedCommands.registerCommand("autoReefCollect", autoReefCollect);
+    NamedCommands.registerCommand("elevatorAutoGround", elevatorAutoGround);
     NamedCommands.registerCommand("elevatorAutoReef1", elevatorAutoReef1);
     NamedCommands.registerCommand("elevatorAutoReef2", elevatorAutoReef2);
     NamedCommands.registerCommand("elevatorAutoLaunch", elevatorAutoLaunch);
     NamedCommands.registerCommand("autoLaunchCommand", autoLaunchCommand);
+    NamedCommands.registerCommand("autoLaunchStill", autoLaunchStill);
     NamedCommands.registerCommand("elevatorAutoCoral", elevatorAutoCoral);
     NamedCommands.registerCommand("wristAutoStow", wristAutoStow);
 
@@ -181,17 +189,14 @@ public class RobotContainer
     // driverXbox.rightBumper().whileTrue(new RunCommand(drivebase::scoringPose));
 
     // Oerator Bindings
-    operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition)
-                                .alongWith(intakeCollect)
-                                  .until(() -> IntakeSubsystem.algaeCollected()))
-                              .onFalse(wristHold);
+    operatorXbox.rightBumper().whileTrue(new ConditionalCommand(wristGroundIntake, wristReefIntake, elevator::checkGroundPosition).alongWith(intakeCollect).until(() -> IntakeSubsystem.algaeCollected()))
+                              .onFalse(wristHold);  
+    operatorXbox.leftTrigger().whileTrue(wristLollipopIntake.alongWith(intakeLollipop).until(() -> IntakeSubsystem.algaeCollected()))
+                              .onFalse(wristLollipopHold);
 
+    operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(wristLaunch.alongWith(launchDelay
+                                  .andThen(intakeFeed.alongWith(feederLaunch)))));
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
-    operatorXbox.rightTrigger().whileTrue(launchGamepiece
-                                .alongWith(wristLaunch
-                                .alongWith(launchDelay
-                                    .andThen(intakeFeed
-                                    .alongWith(feederLaunch)))));
 
     operatorXbox.a().onTrue(elevatorGroundIntake);
     operatorXbox.x().onTrue(elevatorL2Intake);

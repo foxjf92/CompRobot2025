@@ -56,10 +56,8 @@ public final class Constants {
     public static final double wristGroundIntakePosition = 32.0;
     public static final double wristHoldPosition = 0.5;
     public static final double wristReefIntakePosition = 15.0;
-    //public static final double wristL3IntakePosition = 0.0;
     public static final double wristLaunchPosition = 5.0;
-    //public static final double wristCoralTopIntakePosition = 0.0;
-    public static final double wristProcessorPosiiton = 5.0; // TODO put a value in here for wrist processor position
+    public static final double wristProcessorPosiiton = 5.0;
   }
 
   public static class ElevatorConstants {
@@ -67,7 +65,7 @@ public final class Constants {
     public static final double elevatorL2IntakePosition = -26.0;
     public static final double eleavtorL3IntakePosition = -52.0;
     public static final double elevatorLaunchPosition = -40.0;
-    public static final double elevatorAutoCoral = -13.5; //was -15.5, worked but bounced off robot in
+    public static final double elevatorAutoCoral = -13.5; // TODO tune this more
     public static final double elevatorLaunchClearance = -35.0;
     public static final double elevatorCoralTopIntakePosition = 0.0;
     public static final double elevatorProcessorPosiiton = 0.0;
