@@ -134,6 +134,12 @@
                 "data": {
                   "name": "autoLaunchStill"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "wristAutoStow"
+                }
               }
             ]
           }
@@ -245,6 +251,12 @@
                       "type": "named",
                       "data": {
                         "name": "wristAutoStow"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "autoLaunchStill"
                       }
                     }
                   ]

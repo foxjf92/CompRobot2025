@@ -148,8 +148,7 @@ public class RobotContainer
 
   Command autoLaunchCommand = autoLaunchGamepiece
                                 .raceWith(wristAutoLaunch
-                                  .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(1.0)
-                                    .raceWith(autoLaunchStill).withTimeout(1.01)); // change to 1.0?
+                                  .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(1.0)); // changed to 1.0
   
   // Command autoLaunchCommand = autoLaunchGamepiece
   //                               .raceWith(wristAutoLaunch
