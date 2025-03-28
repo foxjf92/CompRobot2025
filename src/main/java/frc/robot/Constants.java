@@ -69,7 +69,7 @@ public final class Constants {
     public static final double elevatorLaunchClearance = -35.0;
     public static final double elevatorCoralTopIntakePosition = 0.0;
     public static final double elevatorProcessorPosiiton = 0.0;
-    public static final double elevatorClimbPosition = 0.0;
+    public static final double elevatorClimbPosition = -0.5;
   }
   
 }

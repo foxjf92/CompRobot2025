@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ElevatorClimbCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FeederCommand;
 import frc.robot.commands.IntakeCommand;
@@ -106,8 +107,8 @@ public class RobotContainer
   Command elevatorAutoReef2 = new ElevatorCommand(elevator, 4);
   Command elevatorAutoLaunch = new ElevatorCommand(elevator, 5);
   Command elevatorAutoCoral = new ElevatorCommand(elevator, 2);
-  // Command elevatorProcessor = new ElevatorCommand(elevator, 3);
-  // Command elevatorClimb = new ElevatorCommand(elevator, 3);
+  Command elevatorLatch = new ElevatorCommand(elevator, 5);
+  Command elevatorClimb = new ElevatorClimbCommand(elevator);
 
   // Feeder commands
   Command feederLaunch = new FeederCommand(feeder, -0.33);
@@ -184,6 +185,7 @@ public class RobotContainer
   {
     // Driver Bindings
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
+    driverXbox.rightTrigger().onTrue(elevatorLatch).onFalse(elevatorClimb);
     // driverXbox.rightBumper().whileTrue(new RunCommand(drivebase::scoringPose));
 
     // Oerator Bindings

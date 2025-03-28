@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -37,7 +38,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       .softLimit
         .forwardSoftLimit(55)
         .forwardSoftLimitEnabled(true)
-        .reverseSoftLimit(0)
+        .reverseSoftLimit(.25)
         .reverseSoftLimitEnabled(true);
 
     elevatorRightConfig = new SparkMaxConfig();
@@ -46,7 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       .idleMode(IdleMode.kBrake)
       .closedLoopRampRate(rampRate) 
       .softLimit
-        .forwardSoftLimit(0.0)
+        .forwardSoftLimit(-0.25)
         .forwardSoftLimitEnabled(true)
         .reverseSoftLimit(-55.0)
         .reverseSoftLimitEnabled(true);
@@ -65,7 +66,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorLeft.set(-speed);
   }
 
-  public boolean checkGroundPosition(){
+  public boolean checkGroundPosition() {
     if(currentPosition > -10.0) // TODO finetune this value a bit
       return true;
     else
@@ -75,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     currentPosition = elevatorRightEncoder.getPosition();
-    // SmartDashboard.putNumber("Elevator Current Position: ", currentPosition);
+    SmartDashboard.putNumber("Elevator Current Position: ", currentPosition);
     // SmartDashboard.putNumber("Elevator Setpoint", ElevatorCommand.elevatorSetpoint);
   }
 
