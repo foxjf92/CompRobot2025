@@ -11,41 +11,9 @@
           }
         },
         {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "elevatorAutoReef1"
-                }
-              },
-              {
-                "type": "parallel",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "autoReefCollect"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 3.0
           }
         },
         {
@@ -55,73 +23,21 @@
           }
         },
         {
-          "type": "race",
+          "type": "wait",
           "data": {
-            "commands": [
-              {
-                "type": "parallel",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "elevatorAutoLaunch"
-                      }
-                    },
-                    {
-                      "type": "sequential",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 0.0
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "autoLaunchCommand"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "waitTime": 3.0
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "TestSequence3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "elevatorAutoReef1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "wristAutoStow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "autoLaunchStill"
-                }
-              }
-            ]
+            "pathName": "TestSequence3"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
           }
         }
       ]

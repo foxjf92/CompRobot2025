@@ -222,8 +222,8 @@ public class RobotContainer
     // return new PathPlannerAuto("TestAuto");
     // return new PathPlannerAuto("1Algae");
     // return new PathPlannerAuto("1AlgaePick2");
-    // return new PathPlannerAuto("2Algae");
-    return new PathPlannerAuto("3AlgaePath");
+    return new PathPlannerAuto("2Algae");
+    // return new PathPlannerAuto("3AlgaePath");
     // return new PathPlannerAuto("3Algae");
 
   }
