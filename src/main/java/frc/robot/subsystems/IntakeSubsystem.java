@@ -53,7 +53,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(algaeSensor.getVoltage() > 0.15) {
+    if(algaeSensor.getVoltage() > 1.25) {
       algaeCollectedStatus = false;
     }
     else {

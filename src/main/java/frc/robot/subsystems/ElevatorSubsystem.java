@@ -76,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     currentPosition = elevatorRightEncoder.getPosition();
-    SmartDashboard.putNumber("Elevator Current Position: ", currentPosition);
+    // SmartDashboard.putNumber("Elevator Current Position: ", currentPosition);
     // SmartDashboard.putNumber("Elevator Setpoint", ElevatorCommand.elevatorSetpoint);
   }
 
