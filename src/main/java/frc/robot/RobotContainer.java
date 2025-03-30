@@ -149,7 +149,7 @@ public class RobotContainer
   Command autoReefCollect = wristAutoReef
                               .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill)).withTimeout(1.0); // reduce to 1 second?
 
-  Command autoLaunchCommand = autoLaunchGamepiece
+  Command autoLaunchCommand = elevatorAutoLaunch.alongWith(autoLaunchGamepiece)
                                 .raceWith(wristAutoLaunch)
                                   .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(1.0); // changed to 1.0
   
@@ -173,6 +173,9 @@ public class RobotContainer
     NamedCommands.registerCommand("autoLaunchStill", autoLaunchStill);
     NamedCommands.registerCommand("elevatorAutoCoral", elevatorAutoCoral);
     NamedCommands.registerCommand("wristAutoStow", wristAutoStow);
+    NamedCommands.registerCommand("intakeAutoStill", intakeAutoStill);
+    NamedCommands.registerCommand("feederAutoStill", feederAutoStill);
+
 
 
     drivebase.setDefaultCommand(driveWithHeadingSnaps);
@@ -219,12 +222,12 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // return null;
-    // return new PathPlannerAuto("TestAuto");
-    // return new PathPlannerAuto("1Algae");
-    // return new PathPlannerAuto("1AlgaePick2");
-    return new PathPlannerAuto("2Algae");
+    // return autoReefCollect;
+    // return autoLaunchCommand;
     // return new PathPlannerAuto("3AlgaePath");
-    // return new PathPlannerAuto("3Algae");
+    // return new PathPlannerAuto("2Algae");
+    return new PathPlannerAuto("3Algae");
+    
 
   }
 
