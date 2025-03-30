@@ -11,18 +11,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TestSequence2"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -39,7 +27,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.0
                       }
                     },
                     {
@@ -55,7 +43,19 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TestSequence2"
+          }
+        },
+        {
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -75,7 +75,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 0.5
+                              "waitTime": 0.0
                             }
                           },
                           {
@@ -88,6 +88,37 @@
                       }
                     }
                   ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "TestSequence3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "elevatorAutoReef1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "wristAutoStow"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "autoLaunchStill"
                 }
               }
             ]

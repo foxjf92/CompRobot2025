@@ -353,6 +353,37 @@
               }
             ]
           }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score3OffLine"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "elevatorAutoCoral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "wristAutoStow"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "autoLaunchStill"
+                }
+              }
+            ]
+          }
         }
       ]
     }

@@ -196,12 +196,16 @@ public class RobotContainer
 
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(wristLaunch.alongWith(launchDelay
                                   .andThen(intakeFeed.alongWith(feederLaunch)))));
+    // operatorXbox.rightTrigger().whileTrue(elevatorLaunch
+    //                                         .alongWith(launchGamepiece
+    //                                           .alongWith(wristLaunch
+    //                                             .alongWith(launchDelay.andThen(intakeFeed.alongWith(feederLaunch)))))); TODO Test this command for one button launch
     operatorXbox.leftBumper().whileTrue(wristProcessor.alongWith(intakeEject));
 
     operatorXbox.a().onTrue(elevatorGroundIntake);
     operatorXbox.x().onTrue(elevatorL2Intake);
     operatorXbox.y().onTrue(elevatorL3Intake);
-    operatorXbox.b().onTrue(elevatorLaunch);
+    operatorXbox.b().onTrue(elevatorLaunch); // TODO Comment out when testing other launch button
   }
 
   /**
@@ -216,7 +220,8 @@ public class RobotContainer
     // return new PathPlannerAuto("1Algae");
     // return new PathPlannerAuto("1AlgaePick2");
     // return new PathPlannerAuto("2Algae");
-    return new PathPlannerAuto("3Algae");
+    return new PathPlannerAuto("3AlgaePath");
+    // return new PathPlannerAuto("3Algae");
 
   }
 
