@@ -148,8 +148,8 @@ public class RobotContainer
                               .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill)).withTimeout(1.0); // reduce to 1 second?
 
   Command autoLaunchCommand = autoLaunchGamepiece
-                                .raceWith(wristAutoLaunch
-                                  .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(1.0)); // changed to 1.0
+                                .raceWith(wristAutoLaunch)
+                                  .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(1.0); // changed to 1.0
   
   // Command autoLaunchCommand = autoLaunchGamepiece
   //                               .raceWith(wristAutoLaunch

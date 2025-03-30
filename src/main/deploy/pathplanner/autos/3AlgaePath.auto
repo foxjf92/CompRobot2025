@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StartToReef1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef1ToScore1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Score1ToReef2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef2ToScore2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Score2ToReef3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef3ToScore3"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
