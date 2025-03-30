@@ -6,7 +6,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class ElevatorClimbCommand extends Command {
+public class ElevatorClimbStillCommand extends Command {
     private final ElevatorSubsystem m_elevator;
     public static double elevatorSetpoint; // Encoder position value that corresponds to arm position
 
@@ -20,7 +20,7 @@ public class ElevatorClimbCommand extends Command {
     // private ProfiledPIDController
     private PIDController m_elevatorPID = new PIDController(kP,kI,kD); // look @ profiled PID maybe?
 
-    public ElevatorClimbCommand(ElevatorSubsystem elevator) {
+    public ElevatorClimbStillCommand(ElevatorSubsystem elevator) {
         m_elevator = elevator;
         addRequirements(m_elevator);
     }
@@ -38,10 +38,8 @@ public class ElevatorClimbCommand extends Command {
         // m_elevator.moveElevator(controlEffort);
 
         //Try to figure out PID but test slowly with this first
-        if(ElevatorSubsystem.currentPosition < -1.0)
-            m_elevator.moveElevator(0.3);
-        if(ElevatorSubsystem.currentPosition > -1.0)
-            m_elevator.moveElevator(0.02);
+        m_elevator.moveElevator(0.0);
+        
     }
 
     @Override

@@ -45,9 +45,9 @@ public class ElevatorCommand extends Command {
         if (targetPosition == 5) {
             elevatorSetpoint = ElevatorConstants.elevatorLaunchPosition;
         }
-        // if (targetPosition == 6) {
-        //     elevatorSetpoint = ElevatorConstants.elevatorProcessorPosiiton; 
-        // }
+        if (targetPosition == 6) {
+            elevatorSetpoint = ElevatorConstants.elevatorLatchPosition; 
+        }
         // if (targetPosition == 7) {
         //     elevatorSetpoint = ElevatorConstants.elevatorClimbPosition;
         // }

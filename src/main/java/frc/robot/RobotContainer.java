@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ElevatorClimbCommand;
+import frc.robot.commands.ElevatorClimbStillCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FeederCommand;
 import frc.robot.commands.IntakeCommand;
@@ -72,8 +73,8 @@ public class RobotContainer
   // Intake function commands
   Command intakeStill = new IntakeCommand(intake, 0);
   Command intakeLollipopStill = new IntakeCommand(intake, 0);
-  Command intakeCollect = new IntakeCommand(intake, -0.7);
-  Command intakeLollipop = new IntakeCommand(intake, -0.7);
+  Command intakeCollect = new IntakeCommand(intake, -0.8);
+  Command intakeLollipop = new IntakeCommand(intake, -0.8);
   Command intakeEject = new IntakeCommand(intake, 0.4); // 0.4 seems to be good
   Command intakeFeed = new IntakeCommand(intake, -0.9);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.8);
@@ -107,8 +108,9 @@ public class RobotContainer
   Command elevatorAutoReef2 = new ElevatorCommand(elevator, 4);
   Command elevatorAutoLaunch = new ElevatorCommand(elevator, 5);
   Command elevatorAutoCoral = new ElevatorCommand(elevator, 2);
-  Command elevatorLatch = new ElevatorCommand(elevator, 5);
+  Command elevatorLatch = new ElevatorCommand(elevator, 6);
   Command elevatorClimb = new ElevatorClimbCommand(elevator);
+  Command elevatorClimbStill = new ElevatorClimbStillCommand(elevator);
 
   // Feeder commands
   Command feederLaunch = new FeederCommand(feeder, -0.33);
@@ -186,6 +188,7 @@ public class RobotContainer
     // Driver Bindings
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
     driverXbox.rightTrigger().onTrue(elevatorLatch).onFalse(elevatorClimb);
+    // driverXbox.rightTrigger().onTrue(elevatorClimb).onFalse(elevatorClimbStill);
     // driverXbox.rightBumper().whileTrue(new RunCommand(drivebase::scoringPose));
 
     // Oerator Bindings
