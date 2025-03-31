@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ElevatorClimbCommand;
-import frc.robot.commands.ElevatorClimbStillCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FeederCommand;
 import frc.robot.commands.IntakeCommand;
@@ -79,6 +78,7 @@ public class RobotContainer
   Command intakeFeed = new IntakeCommand(intake, -0.9);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.8);
   Command intakeAutoStill = new IntakeCommand(intake, 0);
+  Command intakeAutoLaunchStill = new IntakeCommand(intake, 0);
   Command intakeAutoFeed = new IntakeCommand(intake, -0.9); // changed from .3 to .9 to match feeder roller speed
 
 
@@ -92,7 +92,7 @@ public class RobotContainer
   Command wristLollipopIntake = new MoveWristCommand(wrist, 4);
   Command wristLaunch = new MoveWristCommand(wrist, 6);
   Command wristAutoReef = new MoveWristCommand(wrist, 4);
-  Command wristAutoStow = new MoveWristCommand(wrist, 0);
+  Command wristAutoStow = new MoveWristCommand(wrist, 2); // Changed from 0 to 2
   Command wristAutoLaunch = new MoveWristCommand(wrist, 6);
 
   // Command wristCoralTop = new MoveWristCommand(wrist, 7);
@@ -110,12 +110,11 @@ public class RobotContainer
   Command elevatorAutoCoral = new ElevatorCommand(elevator, 2);
   Command elevatorLatch = new ElevatorCommand(elevator, 6);
   Command elevatorClimb = new ElevatorClimbCommand(elevator);
-  Command elevatorClimbStill = new ElevatorClimbStillCommand(elevator);
 
   // Feeder commands
-  Command feederLaunch = new FeederCommand(feeder, -0.33);
+  Command feederLaunch = new FeederCommand(feeder, -0.3); // Was .33, maybe try .33 and 1.0 on intake
   Command feederStill = new FeederCommand(feeder, 0);
-  Command feederAutoLaunch = new FeederCommand(feeder, -0.33);
+  Command feederAutoLaunch = new FeederCommand(feeder, -0.3);
   Command feederAutoStill = new FeederCommand(feeder, 0);
   
   // Launcher commands
@@ -144,8 +143,6 @@ public class RobotContainer
                                               driverXbox.getHID()::getBButtonPressed);
 
   // Auto Commands
-  // Command autoReefCollect = wristAutoReef
-  //                             .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill).withTimeout(3.0)); // previous command, trying to reduce cycle time
   Command autoReefCollect = wristAutoReef
                               .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill)).withTimeout(1.0); // reduce to 1 second?
 
@@ -153,30 +150,28 @@ public class RobotContainer
                                 .raceWith(wristAutoLaunch)
                                   .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(1.0); // changed to 1.0
   
-  // Command autoLaunchCommand = autoLaunchGamepiece
-  //                               .raceWith(wristAutoLaunch
-  //                                 .raceWith(autoLaunchDelay.andThen(intakeAutoFeed.alongWith(feederAutoLaunch))).withTimeout(1.0)
-  //                                   .raceWith(autoLaunchStill).withTimeout(1.01)); // change to 1.0?
+  // Command autoSystemsStow = elevatorAutoCoral.alongWith(wristAutoStow.alongWith(intakeAutoLaunchStill.alongWith(feederAutoStill.alongWith(autoLaunchStill))));
 
   public RobotContainer()
-  {
+  { 
     // Configure the trigger bindings
     configureBindings();
 
     // PathPlanner Commands
-    NamedCommands.registerCommand("autoReefCollect", autoReefCollect);
     NamedCommands.registerCommand("elevatorAutoGround", elevatorAutoGround);
-    NamedCommands.registerCommand("elevatorAutoReef1", elevatorAutoReef1);
-    NamedCommands.registerCommand("elevatorAutoReef2", elevatorAutoReef2);
     NamedCommands.registerCommand("elevatorAutoLaunch", elevatorAutoLaunch);
-    NamedCommands.registerCommand("autoLaunchCommand", autoLaunchCommand);
+    
     NamedCommands.registerCommand("autoLaunchStill", autoLaunchStill);
-    NamedCommands.registerCommand("elevatorAutoCoral", elevatorAutoCoral);
     NamedCommands.registerCommand("wristAutoStow", wristAutoStow);
     NamedCommands.registerCommand("intakeAutoStill", intakeAutoStill);
     NamedCommands.registerCommand("feederAutoStill", feederAutoStill);
 
-
+    NamedCommands.registerCommand("elevatorAutoCoral", elevatorAutoCoral);
+    NamedCommands.registerCommand("elevatorAutoReef1", elevatorAutoReef1);
+    NamedCommands.registerCommand("elevatorAutoReef2", elevatorAutoReef2);
+    NamedCommands.registerCommand("autoReefCollect", autoReefCollect);
+    NamedCommands.registerCommand("autoLaunchCommand", autoLaunchCommand);
+    // NamedCommands.registerCommand("autoSystemsStow", autoSystemsStow);
 
     drivebase.setDefaultCommand(driveWithHeadingSnaps);
     intake.setDefaultCommand(intakeStill);
@@ -191,7 +186,6 @@ public class RobotContainer
     // Driver Bindings
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro)); 
     driverXbox.rightTrigger().onTrue(elevatorLatch).onFalse(elevatorClimb);
-    // driverXbox.rightTrigger().onTrue(elevatorClimb).onFalse(elevatorClimbStill);
     // driverXbox.rightBumper().whileTrue(new RunCommand(drivebase::scoringPose));
 
     // Oerator Bindings
@@ -227,8 +221,6 @@ public class RobotContainer
     // return new PathPlannerAuto("3AlgaePath");
     // return new PathPlannerAuto("2Algae");
     return new PathPlannerAuto("3Algae");
-    
-
   }
 
   public void setMotorBrake(boolean brake)

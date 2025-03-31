@@ -53,7 +53,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.1
                       }
                     },
                     {
@@ -113,7 +113,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "elevatorAutoCoral"
+                  "name": "elevatorAutoReef1"
                 }
               },
               {
@@ -160,7 +160,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.1
                       }
                     },
                     {
@@ -267,7 +267,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.1
                       }
                     },
                     {
@@ -333,7 +333,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "elevatorAutoCoral"
+                  "name": "elevatorAutoGround"
                 }
               },
               {
