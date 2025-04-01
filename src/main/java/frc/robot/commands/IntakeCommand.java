@@ -24,12 +24,12 @@ public class IntakeCommand extends Command{
   @Override
   public void execute(){
       //Logic Change, test out TODO Test this please
-      if(IntakeSubsystem.algaeCollected())
-        m_intake.spinIntake(0);
-      else
-        m_intake.spinIntake(intakeSpeed);
+      // if(IntakeSubsystem.algaeCollected())
+      //   m_intake.spinIntake(0);
+      // else
+      //   m_intake.spinIntake(intakeSpeed);
 
-      // m_intake.spinIntake(intakeSpeed);
+      m_intake.spinIntake(intakeSpeed);
   }
 
   @Override
