@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.ElevatorCommand;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -22,7 +23,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private SparkMaxConfig elevatorLeftConfig;
   private SparkMaxConfig elevatorRightConfig;
 
-  private double rampRate = 0.4; // was .2, doubled to try and observe effect
+  private double rampRate = 0.6; // was .2, doubled to try and observe effect
 
   public RelativeEncoder elevatorRightEncoder;
 
@@ -67,7 +68,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean checkGroundPosition() {
-    if(currentPosition > -10.0) // TODO finetune this value a bit
+    if(currentPosition > -12.0) // TODO finetune this value a bit
       return true;
     else
       return false;
@@ -76,8 +77,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     currentPosition = elevatorRightEncoder.getPosition();
-    // SmartDashboard.putNumber("Elevator Current Position: ", currentPosition);
-    // SmartDashboard.putNumber("Elevator Setpoint", ElevatorCommand.elevatorSetpoint);
+    SmartDashboard.putNumber("Elevator Current Position: ", currentPosition);
+    SmartDashboard.putNumber("Elevator Setpoint", ElevatorCommand.elevatorSetpoint);
   }
 
 }

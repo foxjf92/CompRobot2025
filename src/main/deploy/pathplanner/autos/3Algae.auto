@@ -303,50 +303,6 @@
                 "data": {
                   "name": "wristAutoStow"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "autoLaunchCommand"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Score3OffLine"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "elevatorAutoGround"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "wristAutoStow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "feederAutoStill"
-                }
               },
               {
                 "type": "named",

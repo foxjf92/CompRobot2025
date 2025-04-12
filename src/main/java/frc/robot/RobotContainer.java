@@ -75,11 +75,11 @@ public class RobotContainer
   Command intakeCollect = new IntakeCommand(intake, -0.8);
   Command intakeLollipop = new IntakeCommand(intake, -0.8);
   Command intakeEject = new IntakeCommand(intake, 0.4); // 0.4 seems to be good
-  Command intakeFeed = new IntakeCommand(intake, -0.9);
+  Command intakeFeed = new IntakeCommand(intake, -1.0);
   Command intakeAutoCollect = new IntakeCommand(intake, -0.8);
   Command intakeAutoStill = new IntakeCommand(intake, 0);
   Command intakeAutoLaunchStill = new IntakeCommand(intake, 0);
-  Command intakeAutoFeed = new IntakeCommand(intake, -0.9); // changed from .3 to .9 to match feeder roller speed
+  Command intakeAutoFeed = new IntakeCommand(intake, -1.0); // changed from .3 to .9 to match feeder roller speed
 
 
   // Wrist position commands
@@ -112,9 +112,9 @@ public class RobotContainer
   Command elevatorClimb = new ElevatorClimbCommand(elevator);
 
   // Feeder commands
-  Command feederLaunch = new FeederCommand(feeder, -0.3); // Was .33, maybe try .33 and 1.0 on intake
+  Command feederLaunch = new FeederCommand(feeder, -0.33); // Was .33, maybe try .33 and 1.0 on intake
   Command feederStill = new FeederCommand(feeder, 0);
-  Command feederAutoLaunch = new FeederCommand(feeder, -0.3);
+  Command feederAutoLaunch = new FeederCommand(feeder, -0.33);
   Command feederAutoStill = new FeederCommand(feeder, 0);
   
   // Launcher commands
@@ -144,7 +144,7 @@ public class RobotContainer
 
   // Auto Commands
   Command autoReefCollect = wristAutoReef
-                              .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill)).withTimeout(1.0); // reduce to 1 second?
+                              .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill)).withTimeout(1.5); // reduce to 1 second?
 
   Command autoLaunchCommand = elevatorAutoLaunch.alongWith(autoLaunchGamepiece)
                                 .raceWith(wristAutoLaunch)
@@ -221,6 +221,8 @@ public class RobotContainer
     // return new PathPlannerAuto("3AlgaePath");
     // return new PathPlannerAuto("2Algae");
     return new PathPlannerAuto("3Algae");
+    // return new PathPlannerAuto("SideAlgae");
+
   }
 
   public void setMotorBrake(boolean brake)

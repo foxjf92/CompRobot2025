@@ -1,0 +1,133 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SideAlgae"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "elevatorAutoCoral"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "elevatorAutoReef2"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.1
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "autoReefCollect"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SideToScore"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "wristAutoStow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "autoLaunchCommand"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SideScoreToLollipop"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "elevatorAutoCoral"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "wristAutoStow"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakeAutoStill"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "autoLaunchStill"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
