@@ -144,7 +144,7 @@ public class RobotContainer
 
   // Auto Commands
   Command autoReefCollect = wristAutoReef
-                              .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill)).withTimeout(1.5); // reduce to 1 second?
+                              .raceWith(intakeAutoCollect.until(IntakeSubsystem::algaeCollected).andThen(intakeAutoStill)).withTimeout(2.5); // increased to help make pickup
 
   Command autoLaunchCommand = elevatorAutoLaunch.alongWith(autoLaunchGamepiece)
                                 .raceWith(wristAutoLaunch)

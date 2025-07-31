@@ -23,7 +23,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private SparkMaxConfig elevatorLeftConfig;
   private SparkMaxConfig elevatorRightConfig;
 
-  private double rampRate = 0.6; // was .2, doubled to try and observe effect
+  private double rampRate = 0.1; // was .2, doubled to try and observe effect
 
   public RelativeEncoder elevatorRightEncoder;
 
@@ -35,7 +35,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorLeftConfig
       .smartCurrentLimit(40) // TODO inccrease this to see if elevator speed can be improved 
       .idleMode(IdleMode.kBrake)
-      .closedLoopRampRate(rampRate)
+      .openLoopRampRate(rampRate)
       .softLimit
         .forwardSoftLimit(55)
         .forwardSoftLimitEnabled(true)
@@ -46,7 +46,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorRightConfig
       .smartCurrentLimit(40) // TODO increase this to match above
       .idleMode(IdleMode.kBrake)
-      .closedLoopRampRate(rampRate) 
+      .openLoopRampRate(rampRate) 
       .softLimit
         .forwardSoftLimit(-0.25)
         .forwardSoftLimitEnabled(true)
